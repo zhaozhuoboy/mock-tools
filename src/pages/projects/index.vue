@@ -47,6 +47,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
+import { useHead } from '#imports'
 import { useMessage } from 'naive-ui'
 import type { Project, CreateProjectData } from '../../types/project'
 import ajax from '../../utils/http'
@@ -62,6 +63,10 @@ import CreateProjectModal from '../../components/projects/CreateProjectModal.vue
 // 页面元信息
 definePageMeta({
   layout: 'default'
+})
+
+useHead({
+  title: '项目列表'
 })
 
 // 响应式数据

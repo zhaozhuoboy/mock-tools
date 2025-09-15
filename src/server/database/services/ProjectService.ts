@@ -1,4 +1,5 @@
 import { Project, ProjectAttributes, ProjectCreationAttributes } from '../models/Project'
+import { Api, ApiAttributes, ApiCreationAttributes } from '../models/Api'
 
 export class ProjectService {
   /**
@@ -118,5 +119,14 @@ export class ProjectService {
     } catch (error) {
       throw new Error(`删除项目失败: ${error}`)
     }
+  }
+}
+
+export class ApiService {
+  static async listByProject(projectId: number): Promise<Api[]> {
+    return Api.findAll({ where: { project_id: projectId }, order: [['created_at', 'DESC']] })
+  }
+  static async create(projectId: number, data: ApiCreationAttributes): Promise<Api> {
+    return Api.create({ ...data, project_id: projectId })
   }
 }

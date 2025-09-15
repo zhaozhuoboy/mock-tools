@@ -1,0 +1,179 @@
+<template>
+  <NModal 
+    :show="show"
+    preset="card"
+    title="新建接口"
+    size="huge"
+    :bordered="false"
+    style="width: 600px"
+    class="create-api-modal"
+    @update:show="handleUpdateShow"
+  >
+    <NForm
+      ref="formRef"
+      :model="formData"
+      :rules="formRules"
+      label-placement="top"
+      label-width="auto"
+      require-mark-placement="right-hanging"
+      class="create-api-form"
+    >
+      <NFormItem label="接口路径 Path" path="path">
+        <NInput 
+          v-model:value="formData.path"
+          placeholder="例如：/users/:id 或 /users"
+          size="large"
+        />
+      </NFormItem>
+
+      <NFormItem label="请求方法 Method" path="method">
+        <NSelect 
+          v-model:value="formData.method"
+          :options="methodOptions"
+          placeholder="选择请求方法"
+          size="large"
+        />
+      </NFormItem>
+
+      <NFormItem label="所属分组 Group（可选）" path="group">
+        <NInput 
+          v-model:value="formData.group"
+          placeholder="例如：用户、订单"
+          size="large"
+        />
+      </NFormItem>
+
+      <NFormItem label="接口描述 Description（可选）" path="description">
+        <NInput 
+          v-model:value="formData.description"
+          type="textarea"
+          placeholder="简单描述接口用途"
+          :rows="3"
+          maxlength="500"
+          show-count
+          size="large"
+        />
+      </NFormItem>
+    </NForm>
+
+    <template #footer>
+      <div class="modal-footer">
+        <NButton 
+          size="large"
+          @click="handleCancel"
+          round
+        >
+          取消
+        </NButton>
+        <NButton 
+          type="primary" 
+          size="large"
+          @click="handleSubmit"
+          :loading="loading"
+          round
+        >
+          <template #icon>
+            <NIcon>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </NIcon>
+          </template>
+          创建接口
+        </NButton>
+      </div>
+    </template>
+  </NModal>
+</template>
+
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import { NModal, NForm, NFormItem, NInput, NSelect, NButton, NIcon } from 'naive-ui'
+
+type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete'
+
+interface FormData {
+  path: string
+  method: HttpMethod | null
+  group?: string
+  description?: string
+}
+
+interface Props {
+  show: boolean
+  loading?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), { loading: false })
+
+const emit = defineEmits<{
+  'update:show': [value: boolean]
+  submit: any,
+  cancel: []
+}>()
+
+const formRef = ref()
+const formData = ref<FormData>({
+  path: '',
+  method: null,
+  group: '',
+  description: ''
+})
+
+const methodOptions = [
+  { label: 'GET', value: 'get' },
+  { label: 'POST', value: 'post' },
+  { label: 'PUT', value: 'put' },
+  { label: 'PATCH', value: 'patch' },
+  { label: 'DELETE', value: 'delete' }
+]
+
+const formRules = {
+  path: [
+    { required: true, message: '请输入接口路径', trigger: 'blur' },
+    { min: 1, max: 200, message: '路径长度应在 1-200 个字符', trigger: 'blur' }
+  ],
+  method: [
+    { required: true, message: '请选择请求方法', trigger: ['change', 'blur'] }
+  ]
+}
+
+watch(() => props.show, (val) => {
+  if (val) {
+    formData.value = { path: '', method: null, group: '', description: '' }
+  }
+})
+
+const handleUpdateShow = (value: boolean) => {
+  emit('update:show', value)
+}
+
+const handleSubmit = async () => {
+  await formRef.value?.validate()
+  emit('submit', { 
+    path: formData.value.path.trim(),
+    method: formData.value.method as HttpMethod | null,
+    group: formData.value.group?.trim() || '',
+    description: formData.value.description?.trim() || ''
+  })
+}
+
+const handleCancel = () => {
+  emit('update:show', false)
+  emit('cancel')
+}
+</script>
+
+<style scoped lang="scss">
+.create-api-modal {
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 12px;
+  }
+}
+</style>
+
+
