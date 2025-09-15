@@ -11,7 +11,12 @@ export default defineEventHandler(async (event) => {
     if (!project) {
       return { code: -1203, message: '项目不存在', data: [] }
     }
-    const list = await ApiService.listByProject(project.id)
+    const rawId = (project as any)?.id ?? (typeof (project as any)?.get === 'function' ? (project as any).get('id') : undefined)
+    const projectId = Number(rawId)
+    if (!Number.isFinite(projectId)) {
+      return { code: -1204, message: '项目主键无效', data: [] }
+    }
+    const list = await ApiService.listByProject(projectId)
     return { code: 0, message: 'ok', data: list }
   } catch (error: any) {
     return { code: -1202, message: error?.message || '获取接口列表失败', data: [] }

@@ -132,18 +132,6 @@ User.init(
     updatedAt: 'updated_at',
     indexes: [
       {
-        unique: true,
-        fields: ['uid']
-      },
-      {
-        unique: true,
-        fields: ['username']
-      },
-      {
-        unique: true,
-        fields: ['email']
-      },
-      {
         fields: ['status']
       },
       {

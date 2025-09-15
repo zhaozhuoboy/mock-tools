@@ -36,10 +36,15 @@
       </NFormItem>
 
       <NFormItem label="所属分组 Group（可选）" path="group">
-        <NInput 
+        <NSelect
           v-model:value="formData.group"
-          placeholder="例如：用户、订单"
+          :options="groupOptions"
+          filterable
+          clearable
+          placeholder="选择或输入新分组名称"
           size="large"
+          :tag="true"
+          :on-create="handleCreateTag"
         />
       </NFormItem>
 
@@ -88,15 +93,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { NModal, NForm, NFormItem, NInput, NSelect, NButton, NIcon } from 'naive-ui'
+import type { SelectOption } from 'naive-ui'
+import { getProjectGroups } from '@/utils/server.request'
+import { useRoute } from 'vue-router'
 
 type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete'
 
 interface FormData {
   path: string
   method: HttpMethod | null
-  group?: string
+  group?: string | null
   description?: string
 }
 
@@ -117,9 +125,13 @@ const formRef = ref()
 const formData = ref<FormData>({
   path: '',
   method: null,
-  group: '',
+  group: null,
   description: ''
 })
+
+const groupOptions = ref<SelectOption[]>([])
+const route = useRoute()
+const pid = ref<string | number>(route.params.pid as any)
 
 const methodOptions = [
   { label: 'GET', value: 'get' },
@@ -141,9 +153,30 @@ const formRules = {
 
 watch(() => props.show, (val) => {
   if (val) {
-    formData.value = { path: '', method: null, group: '', description: '' }
+    formData.value = { path: '', method: null, group: null, description: '' }
+    loadGroups()
   }
 })
+
+const loadGroups = async () => {
+  try {
+    const list = await getProjectGroups(pid.value) as any[]
+    groupOptions.value = Array.isArray(list)
+      ? list.map((g: any) => ({ label: g.name, value: g.name }))
+      : []
+  } catch (e) {
+    groupOptions.value = []
+  }
+}
+
+const handleCreateTag = (label: string): SelectOption => {
+  const value = String(label).trim()
+  if (!value) return { label: '', value: '' }
+  if (!groupOptions.value.find(i => i.value === value)) {
+    groupOptions.value.push({ label: value, value })
+  }
+  return { label: value, value }
+}
 
 const handleUpdateShow = (value: boolean) => {
   emit('update:show', value)

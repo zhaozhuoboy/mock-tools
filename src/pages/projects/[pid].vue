@@ -40,6 +40,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { NButton, useMessage } from 'naive-ui'
+import { useRouter } from 'vue-router'
 import ApiItem from '@/components/projects/ApiItem.vue'
 import CreateApiModal from '@/components/projects/CreateApiModal.vue'
 import ajax from '@/utils/http'
@@ -59,13 +60,24 @@ useHead({
   title: project.value.name + ' - 项目详情'
 })
 
+const router = useRouter()
 const loadApis = async () => {
-  const list: any = await ajax({ url: `/api/project/${project.value.pid}/api`, method: 'get' })
-  apis.value = Array.isArray(list) ? list : (Array.isArray(list?.data) ? list.data : [])
+  const res: any = await ajax({ url: `/api/project/${project.value.pid}/api`, method: 'get' }).catch(err => err)
+  // 当项目不存在时，接口会返回业务错误 code（非 0）且 data: []
+  if (res && res.api === 1) {
+    // 业务错误
+    if (res.code === -1203) {
+      router.replace('/404')
+      return
+    }
+  }
+  const list = Array.isArray(res) ? res : (Array.isArray(res?.data) ? res.data : [])
+  apis.value = list
 }
 
 const onCreateApi = () => { showCreateApi.value = true }
-const handleCreateApi = async (data: any) => {
+const handleCreateApi = async (...args: any[]) => {
+  const data = args[0]
   try {
     creatingApi.value = true
     await ajax({ url: `/api/project/${project.value.pid}/api`, method: 'post', data })

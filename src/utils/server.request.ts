@@ -91,3 +91,10 @@ export const serverFetch = (option: {
     })
   })
 }
+
+export function getProjectGroups (pid: number | string) {
+  return serverFetch({
+    url: `/api/project/${pid}/group`,
+    method: 'get'
+  })
+}

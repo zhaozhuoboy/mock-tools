@@ -2,9 +2,10 @@ import { sequelize } from '../config'
 import User from './User'
 import Project from './Project'
 import Api from './Api'
+import ApiGroup from './ApiGroup'
 
 // 导出所有模型
-export { User, Project, Api }
+export { User, Project, Api, ApiGroup }
 export { sequelize }
 
 // 定义模型关联关系
@@ -16,6 +17,9 @@ export const setupAssociations = () => {
   // 项目与接口的关联
   Project.hasMany(Api, { foreignKey: 'project_id', as: 'apis' })
   Api.belongsTo(Project, { foreignKey: 'project_id', as: 'project' })
+  // 项目与分组的关联：以 Project.pid 作为目标键，api_groups.project_id 存 pid
+  Project.hasMany(ApiGroup, { foreignKey: 'project_id', as: 'groups', sourceKey: 'pid', constraints: false })
+  ApiGroup.belongsTo(Project, { foreignKey: 'project_id', as: 'project', targetKey: 'pid', constraints: false })
   
   console.log('✅ 模型关联关系设置完成')
 }
