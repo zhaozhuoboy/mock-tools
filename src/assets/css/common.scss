@@ -1,0 +1,245 @@
+@use './_colors.scss' as *;
+
+// 公共动画
+%transition {
+  transition: all 0.3s ease;
+}
+
+// 单行文字超出部分显示省略号
+%row {
+  overflow: hidden;
+  word-break: keep-all;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+%center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*  强制换行  */
+%wrap {
+  word-wrap: break-word;
+  word-break: normal;
+}
+
+/*  强制不换行  */
+%no-wrap {
+  white-space: nowrap;
+}
+
+%flex-row {
+  display: flex;
+}
+
+%flex-col {
+  display: flex;
+  flex-direction: column;
+}
+// hover 变蓝色
+%hoverBlueText {
+  @extend %transition;
+
+  &:hover {
+    color: $blue;
+  }
+}
+/* 阴影 */
+%shadow {
+  box-shadow: 0 7px 15px rgba($color: #eef2f5, $alpha: 0.8);
+}
+
+/*
+ * 多行文字超出部分显示省略号
+ * autoprefixer 为 webpack 兼容方案，防止过时属性被删除
+ */
+@mixin row($line) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: $line;
+  /* autoprefixer: ignore next */
+  -webkit-box-orient: vertical;
+}
+
+// 基础字号封装，字重默认为 400
+@mixin font($size, $weight: 400) {
+  font-size: $size + px;
+  font-weight: $weight;
+}
+
+// line-height 等于字号
+@mixin lineFont($size, $weight: 400) {
+  line-height: 1;
+  @include font($size, $weight);
+}
+
+// 0.5px
+@mixin halfpixel($borderHeight) {
+  transform: scaleY(calc($borderHeight / 2));
+}
+
+// 布局类型：PC
+@mixin web {
+  [app-layout-type='pc'] {
+    @content;
+  }
+}
+
+// 布局类型：PC，应用到样式内
+@mixin webInner {
+  [app-layout-type='pc'] & {
+    @content;
+  }
+}
+
+// 布局类型：移动端
+@mixin mobile {
+  [app-layout-type='mobile'] {
+    @content;
+  }
+}
+
+// 布局类型：移动端
+@mixin mobileInner {
+  [app-layout-type='mobile'] & {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media screen and (min-width: 640px) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media screen and (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media screen and (min-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media screen and (min-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin xxl {
+  @media screen and (min-width: 1536px) {
+    @content;
+  }
+}
+
+%linearOrange {
+  background: linear-gradient(270deg, #fa8919 1%, #ffa54b 100%);
+}
+
+%linearBlue {
+  background: #4285f4;
+}
+
+%bottomLine {
+  position: relative;
+
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    z-index: 10;
+    height: 1px;
+    background: #e8e8e8;
+    transform: scaleY(0.5);
+  }
+}
+
+%bottomLineBg {
+  position: relative;
+
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAAHuhoaxAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAAaADAAQAAAABAAAAAgAAAAC+gucuAAAAEElEQVQIHWN4+ertfwYQAAAcAAPAK4oUCwAAAABJRU5ErkJggg==')
+      repeat-x;
+    background-size: 1px 1px;
+  }
+
+  &:last-child:after {
+    display: none;
+  }
+}
+
+/**
+* @param { string } $position       0.5边框 默认下边框 
+* @param { string } $hideLastChild  默认隐藏最后一个子元素的下边框 
+*/
+@mixin bottomLineBackGround($position: bottom, $hideLastChild: hide) {
+  position: relative;
+
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    #{$position}: 0;
+    right: 0;
+    height: 1px;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAAHuhoaxAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAAaADAAQAAAABAAAAAgAAAAC+gucuAAAAEElEQVQIHWN4+ertfwYQAAAcAAPAK4oUCwAAAABJRU5ErkJggg==')
+      repeat-x;
+    background-size: 1px 1px;
+  }
+
+  @if $position == bottom {
+    @if $hideLastChild == hide {
+      &:last-child:after {
+        display: none;
+      }
+    }
+  }
+}
+
+// deep
+@mixin deep($selector) {
+  :deep(#{$selector}) {
+    @content;
+  }
+}
+
+// ios 安全下边距
+@mixin safePadding($height: 0) {
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    padding-bottom: calc(#{$height}px + env(safe-area-inset-bottom));
+  }
+}
+
+@mixin safeHeight($height: 0) {
+  @supports (height: env(safe-area-inset-bottom)) {
+    &:after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: calc(#{$height}px + env(safe-area-inset-bottom));
+    }
+  }
+}
+
+@mixin supportsBottom() {
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    @content;
+  }
+}
