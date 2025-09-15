@@ -45,7 +45,8 @@ export default function ajax (option: {
       url += `?t=${Date.now()}`
     }
   
-    if (opt.method?.toLocaleLowerCase() === 'post') {
+    const method = opt.method?.toLowerCase()
+    if (method === 'post' || method === 'put' || method === 'patch') {
       opt.body = option.data
     }
 

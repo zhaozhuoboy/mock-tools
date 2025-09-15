@@ -1,27 +1,39 @@
 <template>
   <NConfigProvider :theme="theme">
-    <div>
-      <NuxtLayout>
-        <NuxtPage />
-      </NuxtLayout>
-    </div>
+    <NMessageProvider>
+      <NNotificationProvider>
+        <NLoadingBarProvider>
+          <NDialogProvider>
+            <div>
+              <NuxtLayout>
+                <NuxtPage />
+              </NuxtLayout>
+            </div>
+          </NDialogProvider>
+        </NLoadingBarProvider>
+      </NNotificationProvider>
+    </NMessageProvider>
   </NConfigProvider>
 </template>
 <script>
 import { watch } from 'vue'
-import { NConfigProvider } from 'naive-ui'
+import { NConfigProvider, NMessageProvider, NNotificationProvider, NLoadingBarProvider, NDialogProvider } from 'naive-ui'
 import { useBaseStore } from '@/store/base'
 
 export default {
   name: 'NuxtApp',
   components: {
-    NConfigProvider
+    NConfigProvider,
+    NMessageProvider,
+    NNotificationProvider,
+    NLoadingBarProvider,
+    NDialogProvider
   },
   setup () {
     useHead({
       titleTemplate: (titleChunk) => {
         console.log('titleChunk', titleChunk)
-        return titleChunk ? `${titleChunk} - Nuxt Start` : 'Nuxt Start';
+        return titleChunk ? `${titleChunk} - Mock Tool` : 'Mock Tool';
       }
     })
 

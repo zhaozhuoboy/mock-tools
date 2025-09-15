@@ -2,7 +2,7 @@
   <div :class="$style['header']">
     <div :class="$style['inner']">
       <div :class="$style['logo']">
-        Nuxt + Naive + Pinia
+        MockTools
       </div>
       <nav :class="$style['nav-wrap']">
       </nav>

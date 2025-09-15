@@ -1,15 +1,16 @@
 import { sequelize } from '../config'
 import User from './User'
+import Project from './Project'
 
 // 导出所有模型
-export { User }
+export { User, Project }
 export { sequelize }
 
 // 定义模型关联关系
 export const setupAssociations = () => {
-  // 在这里可以定义模型之间的关联关系
-  // 例如：User.hasMany(Post)
-  // 例如：Post.belongsTo(User)
+  // 用户和项目的关联关系
+  User.hasMany(Project, { foreignKey: 'owner_id', as: 'projects' })
+  Project.belongsTo(User, { foreignKey: 'owner_id', as: 'owner' })
   
   console.log('✅ 模型关联关系设置完成')
 }
@@ -41,4 +42,4 @@ export const syncAllModels = async (force = false) => {
     console.error('❌ 模型同步失败:', error)
     return false
   }
-} 
+}
