@@ -126,7 +126,31 @@ export class ApiService {
   static async listByProject(projectId: number): Promise<Api[]> {
     return Api.findAll({ where: { project_id: projectId }, order: [['created_at', 'DESC']] })
   }
+  /**
+   * 创建接口
+   * @param projectId 项目ID
+   * @param data 接口数据
+   * @returns 创建的接口
+   */
   static async create(projectId: number, data: ApiCreationAttributes): Promise<Api> {
     return Api.create({ ...data, project_id: projectId })
+  }
+  /**
+   * 更新接口
+   * @param id 接口ID
+   * @param data 接口数据
+   * @returns 
+   */
+  static async update(id: number, data: Partial<ApiAttributes>): Promise<Api | null> {
+    const api = await Api.findByPk(id)
+    if (!api) {
+      return null
+    }
+    await api.update({ ...data })
+    return api
+  }
+
+  static async countByProject(projectId: number): Promise<number> {
+    return Api.count({ where: { project_id: projectId } })
   }
 }

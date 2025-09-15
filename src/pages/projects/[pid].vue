@@ -62,7 +62,7 @@ useHead({
 
 const router = useRouter()
 const loadApis = async () => {
-  const res: any = await ajax({ url: `/api/project/${project.value.pid}/api`, method: 'get' }).catch(err => err)
+  const res: any = await ajax({ url: `/api/project/${project.value.pid}/interface`, method: 'get' }).catch(err => err)
   // 当项目不存在时，接口会返回业务错误 code（非 0）且 data: []
   if (res && res.api === 1) {
     // 业务错误
@@ -80,7 +80,7 @@ const handleCreateApi = async (...args: any[]) => {
   const data = args[0]
   try {
     creatingApi.value = true
-    await ajax({ url: `/api/project/${project.value.pid}/api`, method: 'post', data })
+    await ajax({ url: `/api/project/${project.value.pid}/interface`, method: 'post', data })
     showCreateApi.value = false
     await loadApis()
     message.success('接口创建成功')
