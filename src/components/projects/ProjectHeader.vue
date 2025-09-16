@@ -64,7 +64,7 @@ const handleCreateClick = () => {
 .page-header {
   position: relative;
   z-index: 1;
-  padding: 40px 24px;
+  padding: 32px 24px;
   
   .header-content {
     max-width: 1200px;
@@ -79,52 +79,50 @@ const handleCreateClick = () => {
       
       .title-wrapper {
         .page-title {
-          font-size: 48px;
-          font-weight: 800;
-          color: white;
-          margin: 0 0 16px 0;
-          text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          font-size: 36px;
+          font-weight: 700;
+          color: #1a1a1a;
+          margin: 0 0 12px 0;
           display: flex;
           align-items: center;
-          gap: 16px;
+          gap: 12px;
           
           .title-icon {
-            font-size: 40px;
+            font-size: 32px;
             animation: bounce 2s infinite;
           }
         }
         
         .page-description {
-          font-size: 18px;
-          color: rgba(255, 255, 255, 0.9);
-          margin: 0 0 24px 0;
-          line-height: 1.6;
+          font-size: 16px;
+          color: #666;
+          margin: 0 0 20px 0;
+          line-height: 1.5;
         }
         
         .stats-row {
           display: flex;
-          gap: 32px;
+          gap: 24px;
           
           .stat-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 16px 24px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
             
             .stat-number {
-              font-size: 24px;
-              font-weight: 700;
-              color: white;
+              font-size: 20px;
+              font-weight: 600;
+              color: #1a1a1a;
               margin-bottom: 4px;
             }
             
             .stat-label {
-              font-size: 14px;
-              color: rgba(255, 255, 255, 0.8);
+              font-size: 13px;
+              color: #666;
             }
           }
         }
@@ -135,15 +133,15 @@ const handleCreateClick = () => {
       .create-btn {
         background: linear-gradient(135deg, #ff6b6b, #ee5a24);
         border: none;
-        box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
+        box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
         font-weight: 600;
-        font-size: 16px;
-        padding: 16px 32px;
+        font-size: 15px;
+        padding: 14px 28px;
         transition: all 0.3s ease;
         
         &:hover {
           transform: translateY(-2px);
-          box-shadow: 0 12px 40px rgba(255, 107, 107, 0.4);
+          box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
         }
       }
     }
@@ -165,27 +163,44 @@ const handleCreateClick = () => {
 // 响应式设计
 @media (max-width: 768px) {
   .page-header {
-    padding: 24px 16px;
+    padding: 20px 16px;
     
     .header-content {
       flex-direction: column;
-      gap: 24px;
+      gap: 20px;
       
       .title-section .title-wrapper {
         .page-title {
-          font-size: 36px;
+          font-size: 28px;
           flex-direction: column;
           align-items: flex-start;
           gap: 8px;
+        }
+        
+        .page-description {
+          font-size: 14px;
         }
         
         .stats-row {
           gap: 16px;
           
           .stat-item {
-            padding: 12px 16px;
+            padding: 10px 16px;
+            
+            .stat-number {
+              font-size: 18px;
+            }
+            
+            .stat-label {
+              font-size: 12px;
+            }
           }
         }
+      }
+      
+      .action-section .create-btn {
+        font-size: 14px;
+        padding: 12px 24px;
       }
     }
   }

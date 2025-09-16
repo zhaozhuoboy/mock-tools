@@ -191,33 +191,32 @@ const confirmDelete = () => {
 
 <style scoped lang="scss">
 .project-card {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
   cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+  border: 1px solid #f0f0f0;
   animation: slideInUp 0.6s ease-out var(--delay, 0s);
   animation-fill-mode: both;
   
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    background: rgba(255, 255, 255, 1);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: #e0e0e0;
   }
   
   .card-header {
     display: flex;
     align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 20px;
+    gap: 12px;
+    margin-bottom: 12px;
     
     .project-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
       background: linear-gradient(135deg, #667eea, #764ba2);
       display: flex;
       align-items: center;
@@ -225,7 +224,7 @@ const confirmDelete = () => {
       flex-shrink: 0;
       
       .icon-emoji {
-        font-size: 24px;
+        font-size: 18px;
       }
     }
     
@@ -233,8 +232,8 @@ const confirmDelete = () => {
       flex: 1;
       
       .project-name {
-        font-size: 20px;
-        font-weight: 700;
+        font-size: 15px;
+        font-weight: 600;
         color: #1a1a1a;
         margin: 0;
         line-height: 1.3;
@@ -252,13 +251,13 @@ const confirmDelete = () => {
   }
   
   .card-body {
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     
     .project-description {
       color: #666;
-      font-size: 14px;
-      line-height: 1.6;
-      margin: 0 0 16px 0;
+      font-size: 12px;
+      line-height: 1.4;
+      margin: 0 0 10px 0;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       line-clamp: 2;
@@ -269,15 +268,15 @@ const confirmDelete = () => {
     .project-meta {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
       
       .meta-item {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 8px 12px;
+        gap: 8px;
+        padding: 6px 10px;
         background: rgba(102, 126, 234, 0.05);
-        border-radius: 8px;
+        border-radius: 6px;
         
         .meta-icon {
           color: #667eea;
@@ -286,7 +285,7 @@ const confirmDelete = () => {
         
         .meta-text {
           color: #555;
-          font-size: 13px;
+          font-size: 11px;
           font-weight: 500;
           word-break: break-all;
         }
@@ -298,22 +297,23 @@ const confirmDelete = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 16px;
+    padding-top: 12px;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
     
     .footer-left {
       .create-time {
         color: #999;
-        font-size: 12px;
+        font-size: 10px;
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 4px;
       }
     }
     
     .footer-right {
       .n-button {
         font-weight: 500;
+        font-size: 12px;
       }
     }
   }
@@ -333,7 +333,7 @@ const confirmDelete = () => {
 // 响应式设计
 @media (max-width: 768px) {
   .project-card {
-    padding: 20px;
+    padding: 14px;
   }
 }
 </style>

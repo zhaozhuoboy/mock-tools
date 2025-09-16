@@ -147,23 +147,23 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .projects-page {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #ffffff;
   position: relative;
-  overflow: hidden;
+  min-height: 100vh;
 }
 
 .projects-content {
   position: relative;
   z-index: 1;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 24px 40px;
 }
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
   animation: fadeInUp 0.6s ease-out;
 }
 
@@ -179,6 +179,13 @@ onMounted(() => {
 }
 
 // 响应式设计
+@media (max-width: 1200px) {
+  .projects-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+  }
+}
+
 @media (max-width: 768px) {
   .projects-content {
     padding: 0 16px 24px;
@@ -186,7 +193,17 @@ onMounted(() => {
   
   .projects-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .projects-content {
+    padding: 0 12px 20px;
+  }
+  
+  .projects-grid {
+    gap: 10px;
   }
 }
 </style>
