@@ -18,7 +18,7 @@ export default defineNuxtConfig({
   // 如何静态资源不需要上传cdn， cdnURL 为空
   app: {
     // cdnURL: 'https://danny-static.oss-cn-beijing.aliyuncs.com',
-    buildAssetsDir: 'static/web/nuxt.template',
+    buildAssetsDir: 'static/web/mock',
   },
   runtimeConfig: {
   },
