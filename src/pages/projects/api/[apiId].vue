@@ -68,9 +68,8 @@
       </div>
     </NSpin>
 
-    <!-- 新建数据弹窗 - 懒加载 -->
+    <!-- 新建数据抽屉 -->
     <CreateApiDetailModal
-      v-if="showCreateModal"
       :show="showCreateModal"
       :api-id="apiId"
       @update:show="showCreateModal = $event"
@@ -80,10 +79,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, nextTick, defineAsyncComponent } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { PlusOutlined } from '@vicons/antd'
 import MonacoEditor from '@/components/common/MonacoEditor.vue'
+import CreateApiDetailModal from '@/components/projects/CreateApiDetailModal.vue'
 import { 
   NSpin, 
   NCard, 
@@ -96,14 +96,6 @@ import {
   useMessage 
 } from 'naive-ui'
 import type { ApiDetail, ApiInfoResponse } from '@/types/api-detail'
-
-// 懒加载新建数据弹窗组件，预加载以保持动画效果
-const CreateApiDetailModal = defineAsyncComponent({
-  loader: () => import('@/components/projects/CreateApiDetailModal.vue'),
-  loadingComponent: () => null, // 不显示加载组件
-  delay: 0, // 立即开始加载
-  timeout: 3000 // 3秒超时
-})
 
 // 获取 message API
 const message = useMessage()
@@ -204,11 +196,6 @@ const handleCreateSuccess = async () => {
 // 生命周期
 onMounted(async () => {
   await loadApiInfo()
-  
-  // 页面加载完成后，预加载弹窗组件以保持动画效果
-  await nextTick()
-  // 触发组件预加载
-  import('@/components/projects/CreateApiDetailModal.vue')
 })
 </script>
 

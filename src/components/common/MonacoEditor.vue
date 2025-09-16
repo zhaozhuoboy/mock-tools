@@ -60,6 +60,13 @@ const editorOptions = computed<MonacoEditorNS.IStandaloneEditorConstructionOptio
   scrollBeyondLastLine: false,
   folding: true,
   lineNumbers: 'on',
+  padding: { top: 16, bottom: 16 },
+  scrollbar: {
+    vertical: 'auto',
+    horizontal: 'auto',
+    verticalScrollbarSize: 8,
+    horizontalScrollbarSize: 8,
+  },
 }))
 
 watch(innerValue, (val) => {

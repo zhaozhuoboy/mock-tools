@@ -1,34 +1,43 @@
 <template>
-  <NModal :show="show" preset="dialog" title="新建数据" @update:show="emit('update:show', $event)">
-    <NForm ref="formRef" :model="form" :rules="formRules">
-      <NFormItem label="数据名称" path="name">
-        <NInput v-model:value="form.name" placeholder="请输入数据名称" />
-      </NFormItem>
-      <NFormItem label="数据内容" path="payload">
-        <MonacoEditor
-          v-model:modelValue="form.payload"
-          :height="300"
-          :autoFormatOnMount="true"
-        />
-      </NFormItem>
-    </NForm>
-    
-    <template #action>
-      <NSpace>
-        <NButton @click="handleCancel">取消</NButton>
-        <NButton type="primary" :loading="loading" @click="handleSubmit">
-          创建
-        </NButton>
-      </NSpace>
-    </template>
-  </NModal>
+  <NDrawer 
+    :show="show" 
+    :width="600"
+    placement="right"
+    title="新建数据" 
+    @update:show="emit('update:show', $event)"
+  >
+    <NDrawerContent>
+      <NForm ref="formRef" :model="form" :rules="formRules" label-placement="top">
+        <NFormItem label="数据名称" path="name">
+          <NInput v-model:value="form.name" placeholder="请输入数据名称" />
+        </NFormItem>
+        <NFormItem label="数据内容" path="payload">
+          <MonacoEditor
+            v-model:modelValue="form.payload"
+            :height="'calc(100vh - 420px)'"
+            :autoFormatOnMount="true"
+          />
+        </NFormItem>
+      </NForm>
+      
+      <template #footer>
+        <NSpace justify="end">
+          <NButton @click="handleCancel">取消</NButton>
+          <NButton type="primary" :loading="loading" @click="handleSubmit">
+            创建
+          </NButton>
+        </NSpace>
+      </template>
+    </NDrawerContent>
+  </NDrawer>
 </template>
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import MonacoEditor from '@/components/common/MonacoEditor.vue'
 import { 
-  NModal, 
+  NDrawer,
+  NDrawerContent,
   NForm, 
   NFormItem, 
   NInput, 
