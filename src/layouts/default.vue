@@ -10,27 +10,24 @@
     <NLayoutContent class="layout-content">
       <slot />
     </NLayoutContent>
-    <NLayoutFooter class="layout-footer">
+    <NLayoutFooter v-if="!hideFooter" class="layout-footer">
       <Footer />
     </NLayoutFooter>
   </NLayout>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue'
 import { NLayout, NLayoutContent, NLayoutHeader, NLayoutFooter } from 'naive-ui'
 import Header from '../components/common/header/Index.vue'
 import Footer from '../components/common/footer/Footer.vue'
-export default {
-  name: 'layout',
-  components: {
-    NLayout,
-    NLayoutContent,
-    NLayoutHeader,
-    NLayoutFooter,
-    Header,
-    Footer
-  }
-}
+
+const route = useRoute()
+
+// 从页面元信息中获取 hideFooter 设置
+const hideFooter = computed(() => {
+  return route.meta.layoutProps?.hideFooter === true
+})
 </script>
 
 <style lang="scss" scoped>

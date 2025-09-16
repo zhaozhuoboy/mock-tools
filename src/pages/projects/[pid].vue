@@ -88,7 +88,10 @@ import type { Project } from '@/types/project'
 import { useUserStore } from '@/store/user'
 
 definePageMeta({
-  layout: 'default'
+  layout: 'default',
+  layoutProps: {
+    hideFooter: true
+  }
 })
 
 interface ApiDef { id: string; path: string; group?: string; method: 'get' | 'post' | 'put' | 'patch' | 'delete', description?: string }
