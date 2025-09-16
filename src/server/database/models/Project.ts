@@ -17,16 +17,7 @@ export interface ProjectAttributes {
 export interface ProjectCreationAttributes extends Optional<ProjectAttributes, 'id' | 'pid' | 'created_at' | 'updated_at'> {}
 
 // 项目模型类
-export class Project extends Model<ProjectAttributes, ProjectCreationAttributes> implements ProjectAttributes {
-  public id!: number
-  public pid!: number
-  public name!: string
-  public description?: string
-  public host?: string
-  public owner_id!: number
-  public created_at!: Date
-  public updated_at!: Date
-}
+export class Project extends Model {}
 
 // 初始化项目模型
 Project.init(

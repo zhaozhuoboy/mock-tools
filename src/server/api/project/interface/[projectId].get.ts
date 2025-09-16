@@ -2,7 +2,7 @@ import { ApiService, ProjectService } from '~/server/database/services/ProjectSe
 
 export default defineEventHandler(async (event) => {
   try {
-    const { pid } = getRouterParams(event)
+    const { projectId: pid } = getRouterParams(event)
     const projectPid = Number(pid)
     if (!projectPid || Number.isNaN(projectPid)) {
       return { code: -1201, message: '无效的项目ID', data: [] }

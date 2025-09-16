@@ -22,25 +22,7 @@ export interface UserAttributes {
 export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'created_at' | 'updated_at'> {}
 
 // 用户模型类
-export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
-  public id!: number
-  public uid!: number // 修改为 number 类型
-  public username!: string
-  public email!: string
-  public password!: string
-  public avatar?: string
-  public nickname?: string
-  public phone?: string
-  public status!: 'active' | 'inactive' | 'banned'
-  public role!: 'admin' | 'user' | 'guest'
-  public last_login_at?: Date
-  public created_at!: Date
-  public updated_at!: Date
-
-  // 时间戳
-  public readonly createdAt!: Date
-  public readonly updatedAt!: Date
-}
+export class User extends Model{}
 
 // 初始化用户模型
 User.init(

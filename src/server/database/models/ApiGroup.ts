@@ -12,11 +12,7 @@ export interface ApiGroupAttributes {
 export interface ApiGroupCreationAttributes extends Optional<ApiGroupAttributes, 'id' | 'created_at' | 'updated_at'> {}
 
 export class ApiGroup extends Model<ApiGroupAttributes, ApiGroupCreationAttributes> implements ApiGroupAttributes {
-  public id!: number
-  public project_id!: number
-  public name!: string
-  public created_at!: Date
-  public updated_at!: Date
+  // 移除公共字段声明，让 Sequelize 完全管理属性访问器
 }
 
 ApiGroup.init(

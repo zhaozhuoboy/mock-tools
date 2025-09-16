@@ -2,7 +2,7 @@
   <NModal 
     :show="show"
     preset="card"
-    title="新建接口"
+    :title="isEditMode ? '编辑接口' : '新建接口'"
     size="huge"
     :bordered="false"
     style="width: 600px"
@@ -80,12 +80,15 @@
           <template #icon>
             <NIcon>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <path v-if="isEditMode" d="M20 6L9 17l-5-5"></path>
+                <template v-else>
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </template>
               </svg>
             </NIcon>
           </template>
-          创建接口
+          {{ isEditMode ? '保存修改' : '创建接口' }}
         </NButton>
       </div>
     </template>
@@ -93,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { NModal, NForm, NFormItem, NInput, NSelect, NButton, NIcon } from 'naive-ui'
 import type { SelectOption } from 'naive-ui'
 import { getProjectGroups } from '@/utils/server.request'
@@ -101,7 +104,16 @@ import { useRoute } from 'vue-router'
 
 type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete'
 
+interface ApiData {
+  id: number
+  path: string
+  method: HttpMethod
+  group?: string
+  description?: string
+}
+
 interface FormData {
+  id?: number
   path: string
   method: HttpMethod | null
   group?: string | null
@@ -111,15 +123,23 @@ interface FormData {
 interface Props {
   show: boolean
   loading?: boolean
+  editData?: ApiData | null
 }
 
-const props = withDefaults(defineProps<Props>(), { loading: false })
+const props = withDefaults(defineProps<Props>(), { 
+  loading: false,
+  editData: null
+})
 
 const emit = defineEmits<{
   'update:show': [value: boolean]
-  submit: any,
+  submit: [data: FormData]
+  edit: [data: FormData]
   cancel: []
 }>()
+
+// 计算是否为编辑模式
+const isEditMode = computed(() => !!props.editData)
 
 const formRef = ref()
 const formData = ref<FormData>({
@@ -153,8 +173,31 @@ const formRules = {
 
 watch(() => props.show, (val) => {
   if (val) {
-    formData.value = { path: '', method: null, group: null, description: '' }
+    if (props.editData) {
+      // 编辑模式：预填充数据
+      formData.value = {
+        path: props.editData.path || '',
+        method: props.editData.method || null,
+        group: props.editData.group || null,
+        description: props.editData.description || ''
+      }
+    } else {
+      // 创建模式：清空数据
+      formData.value = { path: '', method: null, group: null, description: '' }
+    }
     loadGroups()
+  }
+})
+
+// 监听编辑数据变化
+watch(() => props.editData, (newEditData) => {
+  if (newEditData && props.show) {
+    formData.value = {
+      path: newEditData.path || '',
+      method: newEditData.method || null,
+      group: newEditData.group || null,
+      description: newEditData.description || ''
+    }
   }
 })
 
@@ -183,13 +226,25 @@ const handleUpdateShow = (value: boolean) => {
 }
 
 const handleSubmit = async () => {
+  console.log('handleSubmit', isEditMode.value)
   await formRef.value?.validate()
-  emit('submit', { 
-    path: formData.value.path.trim(),
-    method: formData.value.method as HttpMethod | null,
-    group: formData.value.group?.trim() || '',
-    description: formData.value.description?.trim() || ''
-  })
+  if (isEditMode.value) {
+    emit('edit', { 
+      id: props.editData?.id,
+      path: formData.value.path.trim(),
+      method: formData.value.method as HttpMethod | null,
+      group: formData.value.group?.trim() || '',
+      description: formData.value.description?.trim() || ''
+    })
+  } else {
+    emit('submit', { 
+      path: formData.value.path.trim(),
+      method: formData.value.method as HttpMethod | null,
+      group: formData.value.group?.trim() || '',
+      description: formData.value.description?.trim() || ''
+    })
+  }
+  
 }
 
 const handleCancel = () => {

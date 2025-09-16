@@ -20,17 +20,21 @@
         :path="api.path"
         :group="api.group"
         :method="api.method"
+        :description="api.description"
+        :api-data="api"
         :last="idx === apis.length - 1"
-        @edit="onEditApi(api)"
-        @delete="onDeleteApi(api)"
+        @edit="onEditApi"
+        @delete="onDeleteApi"
       />
       <div v-if="apis.length === 0" class="empty">暂无接口</div>
     </div>
     <CreateApiModal
+      :edit-data="currentApi"
       :show="showCreateApi"
-      :loading="creatingApi"
+      :loading="currentApi ? updatingApi : creatingApi"
       @update:show="showCreateApi = $event"
       @submit="handleCreateApi"
+      @edit="handleUpdateApi"
       @cancel="showCreateApi = false"
     />
   </div>
@@ -55,6 +59,8 @@ const message = useMessage()
 const apis = ref<ApiDef[]>([])
 const showCreateApi = ref(false)
 const creatingApi = ref(false)
+const updatingApi = ref(false)
+const currentApi = ref<ApiDef | null>(null)
 
 useHead({
   title: project.value.name + ' - 项目详情'
@@ -62,7 +68,7 @@ useHead({
 
 const router = useRouter()
 const loadApis = async () => {
-  const res: any = await ajax({ url: `/api/project/${project.value.pid}/interface`, method: 'get' }).catch(err => err)
+  const res: any = await ajax({ url: `/api/project/interface/${project.value.pid}`, method: 'get' }).catch(err => err)
   // 当项目不存在时，接口会返回业务错误 code（非 0）且 data: []
   if (res && res.api === 1) {
     // 业务错误
@@ -77,10 +83,15 @@ const loadApis = async () => {
 
 const onCreateApi = () => { showCreateApi.value = true }
 const handleCreateApi = async (...args: any[]) => {
+  console.log('handleCreateApi', args)
   const data = args[0]
   try {
     creatingApi.value = true
-    await ajax({ url: `/api/project/${project.value.pid}/interface`, method: 'post', data })
+    const postData = {
+      pid: project.value.pid,
+      ...data
+    }
+    await ajax({ url: `/api/project/interface`, method: 'post', data: postData })
     showCreateApi.value = false
     await loadApis()
     message.success('接口创建成功')
@@ -88,8 +99,41 @@ const handleCreateApi = async (...args: any[]) => {
     creatingApi.value = false
   }
 }
-const onEditApi = (api: ApiDef) => {}
-const onDeleteApi = async (api: ApiDef) => { await loadApis() }
+const onEditApi = (api: ApiDef) => {
+  currentApi.value = api
+  showCreateApi.value = true
+}
+
+const onDeleteApi = async (api: ApiDef) => { 
+  await loadApis() 
+}
+
+const handleUpdateApi = async (data: any) => {
+  if (!currentApi.value) return
+  
+  try {
+    updatingApi.value = true
+    const payload = {
+      id: currentApi.value.id,
+      pid: project.value.pid,
+      ...data
+    }
+    const res: any = await ajax({ 
+      url: `/api/project/interface`, 
+      method: 'put', 
+      data: payload
+    })
+    
+    showCreateApi.value = false
+    currentApi.value = null
+    await loadApis()
+    message.success('接口更新成功')
+  } catch (error: any) {
+    message.error(error?.message || '更新失败')
+  } finally {
+    updatingApi.value = false
+  }
+}
 
 onMounted(() => { loadApis() })
 </script>

@@ -7,10 +7,10 @@
       <span v-if="description" class="desc">{{ description }}</span>
     </div>
     <div class="right">
-      <NButton size="small" quaternary @click="emit('edit')">
+      <NButton size="small" quaternary @click="handleEdit">
         编辑
       </NButton>
-      <NButton size="small" quaternary type="error" @click="emit('delete')">
+      <NButton size="small" quaternary type="error" @click="handleDelete">
         删除
       </NButton>
     </div>
@@ -22,16 +22,25 @@
 import { computed } from 'vue'
 import { NButton, NTag, NDivider } from 'naive-ui'
 
+interface ApiData {
+  id: number
+  path: string
+  method: 'get' | 'post' | 'put' | 'patch' | 'delete'
+  group?: string
+  description?: string
+}
+
 interface Props {
   path: string
   group?: string
   method: 'get' | 'post' | 'put' | 'patch' | 'delete'
   last?: boolean
   description?: string
+  apiData?: ApiData
 }
 
 const props = defineProps<Props>()
-const emit = defineEmits<{ edit: []; delete: [] }>()
+const emit = defineEmits<{ edit: [apiData: ApiData]; delete: [apiData: ApiData] }>()
 
 const methodType = computed(() => {
   const m = props.method.toLowerCase()
@@ -41,6 +50,18 @@ const methodType = computed(() => {
   if (m === 'delete') return 'error'
   return 'default'
 })
+
+const handleEdit = () => {
+  if (props.apiData) {
+    emit('edit', props.apiData)
+  }
+}
+
+const handleDelete = () => {
+  if (props.apiData) {
+    emit('delete', props.apiData)
+  }
+}
 </script>
 
 <style scoped lang="scss">

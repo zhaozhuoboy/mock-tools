@@ -3,13 +3,12 @@ import { GroupService } from '~/server/database/services/GroupService'
 
 export default defineEventHandler(async (event) => {
   try {
-    const { pid } = getRouterParams(event)
-    const projectPid = parseInt(String(pid), 10)
-    if (!Number.isFinite(projectPid)) {
-      return { code: -1211, message: '无效的项目ID' }
-    }
 
     const body = await readBody(event)
+    console.log('body', body)
+    if (!Number.isFinite(body.pid)) {
+      return { code: -1211, message: '无效的项目ID' }
+    }
     if (!body?.path) return { code: -1212, message: '请输入接口路径' }
     if (!body?.method) return { code: -1212, message: '请选择请求方法' }
     // 基础校验，提前失败避免 ORM 泛化错误
@@ -32,7 +31,7 @@ export default defineEventHandler(async (event) => {
       return { code: -1219, message: '描述长度不能超过 500 个字符' }
     }
 
-    const project = await ProjectService.getProjectByPid(projectPid)
+    const project = await ProjectService.getProjectByPid(body.pid)
     if (!project) {
       return { code: -1213, message: '项目不存在' }
     }
@@ -45,7 +44,7 @@ export default defineEventHandler(async (event) => {
 
     // 若带分组，先确保分组存在（不存在则创建）
     if (group) {
-      await GroupService.findOrCreate(projectPid, group)
+      await GroupService.findOrCreate(body.pid, group)
     }
 
     const payload = { path, method: method as any, group: group || undefined, description: description || undefined }

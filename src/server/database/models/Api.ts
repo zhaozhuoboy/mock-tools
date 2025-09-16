@@ -14,16 +14,7 @@ export interface ApiAttributes {
 
 export interface ApiCreationAttributes extends Optional<ApiAttributes, 'id' | 'group' | 'description' | 'created_at' | 'updated_at'> {}
 
-export class Api extends Model<ApiAttributes, ApiCreationAttributes> implements ApiAttributes {
-  public id!: number
-  public project_id!: number
-  public path!: string
-  public method!: 'get' | 'post' | 'put' | 'patch' | 'delete'
-  public group?: string
-  public description?: string
-  public created_at!: Date
-  public updated_at!: Date
-}
+export class Api extends Model{}
 
 Api.init(
   {
