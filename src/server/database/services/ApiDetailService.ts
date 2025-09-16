@@ -1,5 +1,6 @@
 import { ApiDetail, ApiDetailAttributes, ApiDetailCreationAttributes } from '../models/ApiDetail'
 import { Api } from '../models/Api'
+import { ActiveDetailUserMap } from '../models/ActiveDetailUserMap'
 
 export class ApiDetailService {
   /**
@@ -31,6 +32,30 @@ export class ApiDetailService {
       return detail
     } catch (error) {
       throw new Error(`获取当前活跃数据失败: ${error}`)
+    }
+  }
+
+  /**
+   * 获取指定用户在某 API 下的活跃数据，若无则回退到全局 is_active，再无则取第一个
+   */
+  static async getUserActiveDetail(userUid: number, apiId: string): Promise<ApiDetail | null> {
+    try {
+      // 1) 用户维度映射
+      const map = await ActiveDetailUserMap.findOne({ where: { user_uid: userUid, api_id: apiId } })
+      if (map) {
+        const detail = await ApiDetail.findByPk(map.get('detail_id') as string)
+        if (detail) return detail
+      }
+
+      // 2) 回退全局激活
+      const globalActive = await this.getActiveByApiId(apiId)
+      if (globalActive) return globalActive
+
+      // 3) 回退第一个
+      const list = await this.getByApiId(apiId)
+      return list.length > 0 ? list[0] : null
+    } catch (error) {
+      throw new Error(`获取用户活跃数据失败: ${error}`)
     }
   }
 
@@ -117,6 +142,27 @@ export class ApiDetailService {
       return detail
     } catch (error) {
       throw new Error(`设置活跃数据失败: ${error}`)
+    }
+  }
+
+  /**
+   * 设置用户在某 API 下的活跃数据
+   */
+  static async setUserActive(userUid: number, detailId: string): Promise<ApiDetail | null> {
+    try {
+      const detail = await ApiDetail.findByPk(detailId)
+      if (!detail) return null
+
+      // upsert 用户映射 (user_uid, api_id) -> detail_id
+      await ActiveDetailUserMap.upsert({
+        user_uid: userUid,
+        api_id: detail.get('api_id') as string,
+        detail_id: detailId
+      })
+
+      return detail
+    } catch (error) {
+      throw new Error(`设置用户活跃数据失败: ${error}`)
     }
   }
 

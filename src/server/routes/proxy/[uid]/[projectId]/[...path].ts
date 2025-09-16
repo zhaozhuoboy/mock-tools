@@ -48,19 +48,8 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    // 获取该API的激活状态数据
-    let activeData = await ApiDetailService.getActiveByApiId(api.get('id') as string)
-    if (!activeData) {
-      // 没有激活的状态，取第一个
-      const details = await ApiDetailService.getByApiId(api.get('id') as string)
-      if (details.length > 0) {
-        activeData = details[0]
-      }
-      // return {
-      //   code: -1003,
-      //   message: '该接口没有激活的 mock 数据'
-      // }
-    }
+    // 获取该API的激活状态数据（优先按 uid）
+    const activeData = await ApiDetailService.getUserActiveDetail(Number(uid), api.get('id') as string)
 
     // 解析mock数据
     let mockData

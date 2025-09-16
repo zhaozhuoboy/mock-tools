@@ -93,6 +93,7 @@ import {
   useMessage 
 } from 'naive-ui'
 import type { ApiDetail, ApiInfoResponse } from '@/types/api-detail'
+import ajax from '@/utils/http'
 
 // 获取 message API
 const message = useMessage()
@@ -138,22 +139,21 @@ const getMethodType = (method?: string): 'default' | 'warning' | 'error' | 'prim
 const loadApiInfo = async () => {
   try {
     loading.value = true
-    const response = await $fetch<ApiInfoResponse>('/api/project/interface/info', {
-      method: 'POST',
-      body: { apiId }
+    const response: any = await ajax({
+      url: '/api/project/interface/info',
+      method: 'post',
+      data: { apiId }
     })
+
+    apiInfo.value = response.api
+    details.value = response.details
     
-    if (response.success) {
-      apiInfo.value = response.data.api
-      details.value = response.data.details
-      
-      // 设置默认选中的数据（当前活跃的数据）
-      const activeDetail = details.value.find((detail: ApiDetail) => detail.is_active)
-      if (activeDetail) {
-        selectedDetailId.value = activeDetail.id
-      } else if (details.value.length > 0) {
-        selectedDetailId.value = details.value[0].id
-      }
+    // 设置默认选中的数据（用户维度返回 activeDetailId，回退由后端保证）
+    const serverActiveId = response.activeDetailId as string | null | undefined
+    if (serverActiveId) {
+      selectedDetailId.value = serverActiveId
+    } else if (details.value.length > 0) {
+      selectedDetailId.value = details.value[0].id
     }
   } catch (error) {
     console.error('加载 API 信息失败:', error)
@@ -165,15 +165,13 @@ const loadApiInfo = async () => {
 
 const handleDetailChange = async (detailId: string) => {
   try {
-    await $fetch('/api/project/interface/set-active', {
-      method: 'POST',
-      body: { id: detailId }
+    await ajax({
+      url: '/api/project/interface/set-active',
+      method: 'post',
+      data: { id: detailId }
     })
     
-    // 更新本地状态
-    details.value.forEach((detail: ApiDetail) => {
-      detail.is_active = detail.id === detailId
-    })
+    // 本地仅更新选择，不再改写 is_active（按用户维度）
     
     message.success('切换成功')
   } catch (error) {
@@ -251,9 +249,6 @@ onMounted(async () => {
     display: flex;
     align-items: center;
     gap: 8px;
-  }
-  
-  .detail-content {
   }
 }
 

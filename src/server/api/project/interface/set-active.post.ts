@@ -12,8 +12,15 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    // 设置指定数据为当前活跃数据
-    const detail = await ApiDetailService.setActive(id)
+    // 优先设置用户维度活跃数据（从中间件获取 uid）
+    const userUid = (event as any).context?.auth?.uid
+    let detail
+    if (userUid) {
+      detail = await ApiDetailService.setUserActive(userUid, id)
+    } else {
+      // 兼容：无用户上下文时，沿用全局 is_active 逻辑
+      detail = await ApiDetailService.setActive(id)
+    }
     if (!detail) {
       throw createError({
         statusCode: 404,

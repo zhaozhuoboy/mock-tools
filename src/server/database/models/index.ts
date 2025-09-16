@@ -4,9 +4,10 @@ import Project from './Project'
 import Api from './Api'
 import ApiGroup from './ApiGroup'
 import ApiDetail from './ApiDetail'
+import ActiveDetailUserMap from './ActiveDetailUserMap'
 
 // 导出所有模型
-export { User, Project, Api, ApiGroup, ApiDetail }
+export { User, Project, Api, ApiGroup, ApiDetail, ActiveDetailUserMap }
 export { sequelize }
 
 // 定义模型关联关系

@@ -53,6 +53,7 @@ export interface ApiInfoResponse {
       }
     }
     details: ApiDetail[]
+    activeDetailId?: string | null
   }
 }
 

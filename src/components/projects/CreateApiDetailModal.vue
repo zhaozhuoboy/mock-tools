@@ -47,6 +47,7 @@ import {
 } from 'naive-ui'
 import type { FormInst, FormRules } from 'naive-ui'
 import type { ApiDetailCreateParams, ApiDetailResponse } from '@/types/api-detail'
+import ajax from '@/utils/http'
 
 // 定义 props
 interface Props {
@@ -122,16 +123,15 @@ const handleSubmit = async () => {
       payload: form.value.payload
     }
     
-    const response = await $fetch<ApiDetailResponse>('/api/project/interface/add', {
-      method: 'POST',
-      body: params
+    const response: any = await ajax({
+      url: '/api/project/interface/add',
+      method: 'post',
+      data: params
     })
     
-    if (response.success) {
-      emit('update:show', false)
-      emit('success')
-      message.success('创建成功')
-    }
+    emit('update:show', false)
+    emit('success')
+    message.success('创建成功')
   } catch (error) {
     console.error('创建数据失败:', error)
     message.error('创建数据失败')
