@@ -11,7 +11,7 @@ export const initDatabase = async () => {
       throw new Error('数据库初始化失败')
     }
 
-    // 开发环境下同步数据库结构（临时使用 force 重建以清理历史冗余索引）
+    // 开发环境下同步数据库结构
     if (process.env.NODE_ENV === 'development') {
       await syncAllModels(false)
     }

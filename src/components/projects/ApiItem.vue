@@ -13,6 +13,9 @@
       <NButton size="small" quaternary type="error" @click="handleDelete">
         删除
       </NButton>
+      <NButton size="small" quaternary @click="handleDetail">
+        详情
+      </NButton>
     </div>
   </div>
   <NDivider v-if="!last" class="divider" />
@@ -21,6 +24,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { NButton, NTag, NDivider } from 'naive-ui'
+import { useRouter } from 'vue-router'
 
 interface ApiData {
   id: string // 改为 UUID 类型
@@ -41,7 +45,7 @@ interface Props {
 
 const props = defineProps<Props>()
 const emit = defineEmits<{ edit: [apiData: ApiData]; delete: [apiData: ApiData] }>()
-
+const router = useRouter()
 const methodType = computed(() => {
   const m = props.method.toLowerCase()
   if (m === 'get') return 'success'
@@ -63,6 +67,12 @@ const handleDelete = () => {
     emit('delete', props.apiData)
   } else {
     console.error('apiData is undefined or null')
+  }
+}
+
+const handleDetail = () => {
+  if (props.apiData) {
+    router.push(`/projects/api/${props.apiData.id}`)
   }
 }
 </script>
