@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { NButton, useMessage } from 'naive-ui'
+import { NButton, useMessage, useDialog } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import ApiItem from '@/components/projects/ApiItem.vue'
 import CreateApiModal from '@/components/projects/CreateApiModal.vue'
@@ -51,11 +51,12 @@ import ajax from '@/utils/http'
 
 definePageMeta({ layout: 'default' })
 
-interface ApiDef { id: number; path: string; group?: string; method: 'get' | 'post' | 'put' | 'patch' | 'delete', description?: string }
+interface ApiDef { id: string; path: string; group?: string; method: 'get' | 'post' | 'put' | 'patch' | 'delete', description?: string }
 interface ProjectLite { pid: number | string; name: string }
 
 const project = ref<ProjectLite>({ pid: Number(useRoute().params.pid), name: '示例项目' })
 const message = useMessage()
+const dialog = useDialog()
 const apis = ref<ApiDef[]>([])
 const showCreateApi = ref(false)
 const creatingApi = ref(false)
@@ -105,10 +106,35 @@ const onEditApi = (api: ApiDef) => {
 }
 
 const onDeleteApi = async (api: ApiDef) => { 
-  console.log('onDeleteApi', api.id)
-    // await ajax({ url: `/api/project/interface`, method: 'delete', data: { id: api.id } })
-    // await loadApis() 
-    // message.success('接口删除成功')
+  if (!api || !api.id) {
+    message.error('接口数据无效')
+    return
+  }
+  
+  // 显示确认对话框
+  dialog.error({
+    title: '确认删除',
+    content: `确定要删除接口 "${api.path}" 吗？此操作不可撤销。`,
+    positiveText: '删除',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      try {
+        await ajax({ 
+          url: `/api/project/interface`, 
+          method: 'delete', 
+          data: { 
+            id: api.id,
+            pid: project.value?.pid 
+          } 
+        })
+        await loadApis() 
+        message.success('接口删除成功')
+      } catch (error: any) {
+        console.error('删除接口失败:', error)
+        message.error(error?.message || '删除接口失败')
+      }
+    }
+  })
 }
 
 const handleUpdateApi = async (data: any) => {

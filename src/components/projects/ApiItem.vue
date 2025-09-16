@@ -23,7 +23,7 @@ import { computed } from 'vue'
 import { NButton, NTag, NDivider } from 'naive-ui'
 
 interface ApiData {
-  id: number
+  id: string // 改为 UUID 类型
   path: string
   method: 'get' | 'post' | 'put' | 'patch' | 'delete'
   group?: string
@@ -58,8 +58,11 @@ const handleEdit = () => {
 }
 
 const handleDelete = () => {
+  console.log('handleDelete called, props.apiData:', props.apiData)
   if (props.apiData) {
     emit('delete', props.apiData)
+  } else {
+    console.error('apiData is undefined or null')
   }
 }
 </script>

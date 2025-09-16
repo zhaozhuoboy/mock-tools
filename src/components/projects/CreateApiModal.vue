@@ -105,7 +105,7 @@ import { useRoute } from 'vue-router'
 type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete'
 
 interface ApiData {
-  id: number
+  id: string // 改为 UUID 类型
   path: string
   method: HttpMethod
   group?: string
@@ -113,7 +113,7 @@ interface ApiData {
 }
 
 interface FormData {
-  id?: number
+  id?: string // 改为 UUID 类型
   path: string
   method: HttpMethod | null
   group?: string | null

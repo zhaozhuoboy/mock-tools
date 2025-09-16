@@ -46,7 +46,7 @@ export default function ajax (option: {
     }
   
     const method = opt.method?.toLowerCase()
-    if (method === 'post' || method === 'put' || method === 'patch') {
+    if (method === 'post' || method === 'put' || method === 'patch' || method === 'delete') {
       opt.body = option.data
     }
 

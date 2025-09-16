@@ -4,9 +4,11 @@ import { Api } from '~/server/database/models/Api'
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
+    console.log('Delete API request body:', body)
     
     // 验证必要参数
     if (!body.id || typeof body.id !== 'string' || body.id.trim().length === 0) {
+      console.log('Invalid API ID:', body.id)
       return { code: -1241, message: '无效的接口ID' }
     }
     if (!Number.isFinite(body.pid)) {
