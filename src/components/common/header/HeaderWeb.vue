@@ -1,14 +1,14 @@
 <template>
-  <div :class="$style['header']">
-    <div :class="$style['inner']">
-      <NuxtLink to="/" :class="$style['logo']">
+  <div class="header">
+    <div class="inner">
+      <NuxtLink to="/" class="logo">
         MockTools
       </NuxtLink>
-      <nav :class="$style['nav-wrap']">
+      <nav class="nav-wrap">
         <NuxtLink to="/projects" class="nav-link">项目</NuxtLink>
       </nav>
 
-      <div :class="$style['account']">
+      <div class="account">
         <!-- 使用 ClientOnly 避免 SSR 水合不匹配 -->
         <ClientOnly>
           <!-- 未登录状态 -->
@@ -118,58 +118,140 @@ const handleUserMenuSelect = async (key: string) => {
 }
 </script>
 
-<style lang="scss" module>
+<style lang="scss" scoped>
 .header {
-  @extend %center;
-  height: 60px;
-  box-shadow: 0 1px 20px rgba($color: #000000, $alpha: 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .inner {
   flex-grow: 1;
   display: flex;
   align-items: center;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
+  padding: 0 24px;
 }
 
 .logo {
-  @extend %center;
-  height: 60px;
-  padding: 0 20px;
-  @include font(20, 500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  padding: 0 24px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    color: #667eea;
+    transform: scale(1.05);
+  }
 }
 
 .nav-wrap {
-  @extend %center;
-  margin: 0 30px;
-  gap: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 40px;
+  gap: 24px;
 }
 
 .nav-link {
   color: #374151;
   text-decoration: none;
   font-weight: 500;
-  padding: 8px 12px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  font-size: 15px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
 
   &:hover {
-    background-color: #f3f4f6;
-    color: #1f2937;
+    background-color: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    transform: translateY(-1px);
   }
 
   &.router-link-active {
-    background-color: #e0e7ff;
-    color: #3730a3;
+    background-color: rgba(102, 126, 234, 0.15);
+    color: #667eea;
+    font-weight: 600;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 2px;
+      background: #667eea;
+      border-radius: 1px;
+    }
   }
 }
 
 .account {
   margin-left: auto;
-  padding: 0 20px;
+  padding: 0 24px;
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .inner {
+    padding: 0 16px;
+  }
+  
+  .logo {
+    padding: 0 16px;
+    font-size: 18px;
+  }
+  
+  .nav-wrap {
+    margin: 0 20px;
+    gap: 16px;
+  }
+  
+  .nav-link {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  .account {
+    padding: 0 16px;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    height: 56px;
+  }
+  
+  .logo {
+    height: 56px;
+    font-size: 16px;
+  }
+  
+  .nav-wrap {
+    margin: 0 12px;
+    gap: 12px;
+  }
+  
+  .nav-link {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
 }
 </style>

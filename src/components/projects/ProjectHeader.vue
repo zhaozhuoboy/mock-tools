@@ -128,23 +128,6 @@ const handleCreateClick = () => {
         }
       }
     }
-    
-    .action-section {
-      .create-btn {
-        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-        border: none;
-        box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
-        font-weight: 600;
-        font-size: 15px;
-        padding: 14px 28px;
-        transition: all 0.3s ease;
-        
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-        }
-      }
-    }
   }
 }
 

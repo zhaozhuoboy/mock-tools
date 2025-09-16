@@ -1,18 +1,16 @@
 <template>
   <NLayout
-    :class="$style['layout']"
+    class="layout"
     :native-scrollbar="false"
-    :content-class="$style['layout-content']"
+    :content-class="'layout-content'"
   >
-    <NLayoutHeader :class="$style['layout-header']">
+    <NLayoutHeader class="layout-header">
       <Header />
     </NLayoutHeader>
-    <NLayoutContent>
-      <div layout-inner :class="$style['inner']">
-        <slot />
-      </div>
+    <NLayoutContent class="layout-content">
+      <slot />
     </NLayoutContent>
-    <NLayoutFooter :class="$style['layout-footer']">
+    <NLayoutFooter class="layout-footer">
       <Footer />
     </NLayoutFooter>
   </NLayout>
@@ -35,38 +33,50 @@ export default {
 }
 </script>
 
-<style lang="scss" module>
+<style lang="scss" scoped>
 .layout {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
+  background: #ffffff;
 }
 
 .layout-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 100%;
-}
-
-.layout-header, .layout-footer {
-  flex-shrink: 0;
+  background: #ffffff;
 }
 
 .layout-header {
-  position: sticky; top: 0; z-index: 100;
-}
-
-.page-content {
-  // flex: 1;
-}
-
-.inner {
-  max-width: 1200px;
-  margin: auto;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .layout-footer {
-  min-height: 100px;
-  @extend %center;
+  flex-shrink: 0;
+  background: #f8fafc;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .layout-header {
+    background: rgba(255, 255, 255, 0.98);
+  }
+  
+  .layout-footer {
+    min-height: 60px;
+  }
 }
 </style>
