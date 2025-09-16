@@ -119,8 +119,7 @@ import type { ApiDetail, ApiInfoResponse, ApiDetailCreateParams, ApiDetailRespon
 const message = useMessage()
 
 definePageMeta({ 
-  layout: 'default',
-  middleware: 'auth'
+  layout: 'default'
 })
 
 const route = useRoute()

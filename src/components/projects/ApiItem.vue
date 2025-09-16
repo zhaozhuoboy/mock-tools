@@ -13,7 +13,7 @@
       <NButton size="small" quaternary type="error" @click="handleDelete">
         删除
       </NButton>
-      <NButton size="small" quaternary @click="handleDetail">
+      <NButton size="small" quaternary type="primary" @click="handleDetail">
         详情
       </NButton>
     </div>

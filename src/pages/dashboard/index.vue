@@ -17,8 +17,7 @@ export default {
   name: 'page-dashboard',
   setup () {
     definePageMeta({
-      layout: 'admin',
-      middleware: 'auth'
+      layout: 'admin'
     })
   }
 }

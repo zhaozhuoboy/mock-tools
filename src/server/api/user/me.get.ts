@@ -3,7 +3,8 @@ import { UserService } from '../../database/services/UserService'
 import jwt from 'jsonwebtoken'
 
 // JWT密钥（实际项目中应该从环境变量获取）
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
+const config = useRuntimeConfig()
+const JWT_SECRET = config.jwtSecret
 
 /**
  * 获取当前用户信息
@@ -27,11 +28,10 @@ export default defineEventHandler(async (event) => {
       decoded = jwt.verify(token, JWT_SECRET)
     } catch (error) {
       return {
-        code: 1,
+        code: -2001,
         message: 'token无效或已过期'
       }
     }
-
     // 根据token中的用户ID获取用户信息
     const user = await UserService.findById(decoded.id)
     if (!user) {

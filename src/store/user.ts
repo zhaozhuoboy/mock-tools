@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import ajax from '../utils/http'
 
 export interface User {
   id: number
@@ -28,6 +29,13 @@ export interface RegisterData {
   phone?: string
 }
 
+export interface ApiResponse<T = any> {
+  code: number
+  data?: T
+  message?: string
+  error?: any
+}
+
 export const useUserStore = defineStore('user', () => {
   const user = ref<User | null>(null)
   const token = ref<string | null>(null)
@@ -46,9 +54,6 @@ export const useUserStore = defineStore('user', () => {
    * 获取token
    */
   const getToken = () => {
-    if (process.client && !token.value) {
-      token.value = localStorage.getItem('token')
-    }
     return token.value
   }
 
@@ -82,22 +87,24 @@ export const useUserStore = defineStore('user', () => {
    */
   const login = async (loginData: LoginData) => {
     try {
-      const { data } = await $fetch('/api/user/login', {
-        method: 'POST',
-        body: loginData
+      const data = await ajax({
+        url: '/api/user/login',
+        method: 'post',
+        data: loginData
       })
 
-      if (data?.token && data?.user) {
-        setToken(data.token)
-        setUser(data.user)
-        return { success: true, data: data.user }
+      const responseData = data as any
+      if (responseData?.token && responseData?.user) {
+        setToken(responseData.token)
+        setUser(responseData.user)
+        return { success: true, data: responseData.user }
       } else {
         return { success: false, message: '登录失败' }
       }
     } catch (error: any) {
       return { 
         success: false, 
-        message: error.data?.message || '登录失败，请稍后重试' 
+        message: error.message || '登录失败，请稍后重试' 
       }
     }
   }
@@ -107,16 +114,17 @@ export const useUserStore = defineStore('user', () => {
    */
   const register = async (registerData: RegisterData) => {
     try {
-      const { data } = await $fetch('/api/user/register', {
-        method: 'POST',
-        body: registerData
+      const data = await ajax({
+        url: '/api/user/register',
+        method: 'post',
+        data: registerData
       })
 
       return { success: true, data }
     } catch (error: any) {
       return { 
         success: false, 
-        message: error.data?.message || '注册失败，请稍后重试' 
+        message: error.message || '注册失败，请稍后重试' 
       }
     }
   }
@@ -131,23 +139,27 @@ export const useUserStore = defineStore('user', () => {
         return { success: false, message: '未登录' }
       }
 
-      const { data } = await $fetch('/api/user/me', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+      // 使用 ajax 封装方法请求
+      const data = await ajax({
+        url: '/api/user/me',
+        method: 'get'
       })
 
+      // ajax 方法已经处理了响应格式，直接使用返回的 data
       if (data) {
-        setUser(data)
-        return { success: true, data }
+        setUser(data as User)
+        return { success: true, data: data as User }
       } else {
-        return { success: false, message: '获取用户信息失败' }
+        return { 
+          success: false, 
+          message: '获取用户信息失败' 
+        }
       }
     } catch (error: any) {
-      clearUser()
+      console.error('获取用户信息失败:', error)
       return { 
         success: false, 
-        message: error.data?.message || '获取用户信息失败' 
+        message: error.message || '获取用户信息失败' 
       }
     }
   }
@@ -158,8 +170,9 @@ export const useUserStore = defineStore('user', () => {
   const logout = async () => {
     try {
       // 调用登出API
-      await $fetch('/api/user/logout', {
-        method: 'POST'
+      await ajax({
+        url: '/api/user/logout',
+        method: 'post'
       })
     } catch (error) {
       console.error('登出API调用失败:', error)

@@ -46,14 +46,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { useHead } from '#imports'
+import { ref, onMounted } from 'vue'
 import { useMessage } from 'naive-ui'
-import type { Project, CreateProjectData } from '../../types/project'
+import type { Project } from '../../types/project'
 import ajax from '../../utils/http'
 
 // 导入组件
-import BackgroundDecoration from '../../components/projects/BackgroundDecoration.vue'
 import ProjectHeader from '../../components/projects/ProjectHeader.vue'
 import ProjectCard from '../../components/projects/ProjectCard.vue'
 import EmptyState from '../../components/projects/EmptyState.vue'
@@ -62,8 +60,7 @@ import CreateProjectModal from '../../components/projects/CreateProjectModal.vue
 
 // 页面元信息
 definePageMeta({
-  layout: 'default',
-  middleware: 'auth'
+  layout: 'default'
 })
 
 useHead({

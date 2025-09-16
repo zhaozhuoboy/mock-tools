@@ -6,7 +6,6 @@
       </NuxtLink>
       <nav :class="$style['nav-wrap']">
         <NuxtLink to="/projects" class="nav-link">项目</NuxtLink>
-        <NuxtLink to="/dashboard" class="nav-link">仪表盘</NuxtLink>
       </nav>
 
       <div :class="$style['account']">

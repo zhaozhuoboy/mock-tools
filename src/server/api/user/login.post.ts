@@ -1,7 +1,6 @@
 import { readBody, defineEventHandler } from 'h3'
 import { UserService } from '../../database/services/UserService'
 import { verifyPassword } from '../../utils/crypto'
-import { generateJwtSecret } from '../../utils/crypto'
 import jwt from 'jsonwebtoken'
 import { z } from 'zod'
 
@@ -12,7 +11,8 @@ const loginSchema = z.object({
 })
 
 // JWT密钥（实际项目中应该从环境变量获取）
-const JWT_SECRET = process.env.JWT_SECRET || generateJwtSecret()
+const config = useRuntimeConfig()
+const JWT_SECRET = config.jwtSecret
 
 /**
  * 用户登录接口

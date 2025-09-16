@@ -46,9 +46,9 @@
             <NCheckbox v-model:checked="rememberMe">
               记住我
             </NCheckbox>
-            <NuxtLink to="/auth/forgot-password" class="text-sm text-indigo-600 hover:text-indigo-500">
+            <!-- <NuxtLink to="/auth/forgot-password" class="text-sm text-indigo-600 hover:text-indigo-500">
               忘记密码？
-            </NuxtLink>
+            </NuxtLink> -->
           </div>
         </NFormItem>
 

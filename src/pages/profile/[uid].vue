@@ -13,7 +13,6 @@ export default {
   setup () {
     definePageMeta({
       title: '个人主页',
-      middleware: 'auth',
       validate: async (route) => {
         const uid = route.params.uid
         console.log('uid', uid)
