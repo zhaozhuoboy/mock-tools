@@ -32,6 +32,13 @@
           <NButton type="primary" round @click="onCreateApi">新建接口</NButton>
         </div>
       </div>
+      <div class="mock-url">
+        <NInputGroup>
+          <NInputGroupLabel>Mock URL:</NInputGroupLabel>
+          <NInput :value="mockUrl" disabled readonly style="flex: 1;" />
+        </NInputGroup>
+        <NButton type="primary" ghost @click="copyMockUrl">复制</NButton>
+      </div>
 
       <div class="api-list">
         <ApiItem
@@ -63,13 +70,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { NButton, useMessage, useDialog, NSkeleton } from 'naive-ui'
+import { ref, onMounted, computed } from 'vue'
+import { NButton, useMessage, useDialog, NSkeleton, NInput, NInputGroup, NInputGroupLabel } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import ApiItem from '@/components/projects/ApiItem.vue'
 import CreateApiModal from '@/components/projects/CreateApiModal.vue'
 import ajax from '@/utils/http'
 import type { Project } from '@/types/project'
+import { useUserStore } from '@/store/user'
 
 definePageMeta({
   layout: 'default'
@@ -78,6 +86,7 @@ definePageMeta({
 interface ApiDef { id: string; path: string; group?: string; method: 'get' | 'post' | 'put' | 'patch' | 'delete', description?: string }
 
 const route = useRoute()
+const userStore = useUserStore()
 const project = ref<Project | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
@@ -90,6 +99,22 @@ const updatingApi = ref(false)
 const currentApi = ref<ApiDef | null>(null)
 
 const router = useRouter()
+// 计算 Mock URL
+const mockUrl = computed(() => {
+  if (!project.value || !userStore.user) return ''
+
+  return `${location.origin}/proxy/${userStore.user.uid}/${project.value.pid}`
+})
+
+// 复制到剪贴板
+const copyMockUrl = async () => {
+  try {
+    await navigator.clipboard.writeText(mockUrl.value)
+    message.success('已复制到剪贴板')
+  } catch (e) {
+    message.error('复制失败，请手动复制')
+  }
+}
 
 // 格式化日期
 const formatDate = (dateString: string) => {
@@ -337,6 +362,13 @@ onMounted(async () => {
   text-align: center;
   color: #9ca3af;
   font-size: 16px;
+}
+
+.mock-url {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 20px;
 }
 </style>
 

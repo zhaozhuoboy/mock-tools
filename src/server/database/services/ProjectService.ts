@@ -171,4 +171,22 @@ export class ApiService {
   static async countByProject(projectId: string): Promise<number> {
     return Api.count({ where: { project_id: projectId } })
   }
+
+  /**
+   * 根据路径查找API
+   * @param path 接口路径
+   * @returns 找到的API
+   */
+  static async findByPath(path: string): Promise<Api | null> {
+    try {
+      const api = await Api.findOne({
+        where: {
+          path: path
+        }
+      })
+      return api
+    } catch (error) {
+      throw new Error(`查找API失败: ${error}`)
+    }
+  }
 }
