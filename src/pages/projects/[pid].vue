@@ -105,7 +105,10 @@ const onEditApi = (api: ApiDef) => {
 }
 
 const onDeleteApi = async (api: ApiDef) => { 
-  await loadApis() 
+  console.log('onDeleteApi', api.id)
+    // await ajax({ url: `/api/project/interface`, method: 'delete', data: { id: api.id } })
+    // await loadApis() 
+    // message.success('接口删除成功')
 }
 
 const handleUpdateApi = async (data: any) => {

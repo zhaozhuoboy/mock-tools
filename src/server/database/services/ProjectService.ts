@@ -150,6 +150,24 @@ export class ApiService {
     return api
   }
 
+  /**
+   * 删除接口
+   * @param id 接口ID
+   * @returns 
+   */
+  static async deleteApi(id: number): Promise<Api | null> {
+    const api = await Api.findByPk(id)
+    if (!api) {
+      return null
+    }
+    await api.destroy()
+    return api
+  }
+  /**
+   * 统计接口数量
+   * @param projectId 项目ID
+   * @returns 接口数量
+   */
   static async countByProject(projectId: number): Promise<number> {
     return Api.count({ where: { project_id: projectId } })
   }
