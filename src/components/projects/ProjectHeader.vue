@@ -81,7 +81,7 @@ const handleCreateClick = () => {
         .page-title {
           font-size: 36px;
           font-weight: 700;
-          color: #1a1a1a;
+          color: var(--text-1);
           margin: 0 0 12px 0;
           display: flex;
           align-items: center;
@@ -95,7 +95,7 @@ const handleCreateClick = () => {
         
         .page-description {
           font-size: 16px;
-          color: #666;
+          color: var(--text-2);
           margin: 0 0 20px 0;
           line-height: 1.5;
         }
@@ -109,20 +109,20 @@ const handleCreateClick = () => {
             flex-direction: column;
             align-items: center;
             padding: 12px 20px;
-            background: #f8f9fa;
+            background: var(--card-hover);
             border-radius: 12px;
-            border: 1px solid #e9ecef;
+            border: 1px solid var(--border);
             
             .stat-number {
               font-size: 20px;
               font-weight: 600;
-              color: #1a1a1a;
+              color: var(--text-1);
               margin-bottom: 4px;
             }
             
             .stat-label {
               font-size: 13px;
-              color: #666;
+              color: var(--text-2);
             }
           }
         }

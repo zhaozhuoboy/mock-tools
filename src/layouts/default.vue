@@ -38,14 +38,14 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: #ffffff;
+  background: var(--bg);
 }
 
 .layout-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: #ffffff;
+  background: var(--bg);
 }
 
 .layout-header {
@@ -53,16 +53,16 @@ export default {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-elevated);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .layout-footer {
   flex-shrink: 0;
-  background: #f8fafc;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--card-hover);
+  border-top: 1px solid var(--border);
   min-height: 80px;
   display: flex;
   align-items: center;
@@ -72,7 +72,7 @@ export default {
 /* 响应式设计 */
 @media (max-width: 768px) {
   .layout-header {
-    background: rgba(255, 255, 255, 0.98);
+    background: var(--bg-elevated);
   }
   
   .layout-footer {

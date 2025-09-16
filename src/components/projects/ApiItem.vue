@@ -7,7 +7,7 @@
       <span v-if="description" class="desc">{{ description }}</span>
     </div>
     <div class="right">
-      <NButton size="small" quaternary @click="handleEdit">
+      <NButton size="small" quaternary type="info" @click="handleEdit">
         编辑
       </NButton>
       <NButton size="small" quaternary type="error" @click="handleDelete">
@@ -94,14 +94,14 @@ const handleDetail = () => {
     }
     .path {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      color: #333;
+      color: var(--text-1);
     }
     .group {
-      background: rgba(102, 126, 234, 0.08);
-      border: 1px solid rgba(102, 126, 234, 0.18);
+      background: var(--primary-tint-1);
+      border: 1px solid var(--primary-tint-2);
     }
     .desc {
-      color: #666;
+      color: var(--text-2);
       font-size: 12px;
       margin-left: 8px;
     }
@@ -115,6 +115,9 @@ const handleDetail = () => {
 
 .divider {
   margin: 0;
+  height: 1px;
+  // background-color: var(--border);
+  // border-color: var(--border);
 }
 </style>
 

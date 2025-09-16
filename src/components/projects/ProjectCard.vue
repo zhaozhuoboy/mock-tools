@@ -191,20 +191,20 @@ const confirmDelete = () => {
 
 <style scoped lang="scss">
 .project-card {
-  background: #ffffff;
+  background: var(--card);
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
   cursor: pointer;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--border);
   animation: slideInUp 0.6s ease-out var(--delay, 0s);
   animation-fill-mode: both;
   
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    border-color: #e0e0e0;
+    border-color: var(--border);
   }
   
   .card-header {
@@ -234,7 +234,7 @@ const confirmDelete = () => {
       .project-name {
         font-size: 15px;
         font-weight: 600;
-        color: #1a1a1a;
+        color: var(--text-1);
         margin: 0;
         line-height: 1.3;
       }
@@ -254,7 +254,7 @@ const confirmDelete = () => {
     margin-bottom: 12px;
     
     .project-description {
-      color: #666;
+      color: var(--text-2);
       font-size: 12px;
       line-height: 1.4;
       margin: 0 0 10px 0;
@@ -275,16 +275,16 @@ const confirmDelete = () => {
         align-items: center;
         gap: 8px;
         padding: 6px 10px;
-        background: rgba(102, 126, 234, 0.05);
+        background: var(--primary-tint-1);
         border-radius: 6px;
         
         .meta-icon {
-          color: #667eea;
+          color: var(--primary);
           flex-shrink: 0;
         }
         
         .meta-text {
-          color: #555;
+          color: var(--text-2);
           font-size: 11px;
           font-weight: 500;
           word-break: break-all;
@@ -298,11 +298,11 @@ const confirmDelete = () => {
     justify-content: space-between;
     align-items: center;
     padding-top: 12px;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-top: 1px solid var(--border);
     
     .footer-left {
       .create-time {
-        color: #999;
+        color: var(--text-3);
         font-size: 10px;
         display: flex;
         align-items: center;

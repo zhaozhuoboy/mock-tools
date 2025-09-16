@@ -1,3 +1,47 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  /* Surfaces */
+  --bg: #ffffff;
+  --bg-elevated: rgba(255, 255, 255, 0.95);
+  --card: #ffffff;
+  --card-hover: #f8fafc;
+
+  /* Text */
+  --text-1: #1a1a1a;
+  --text-2: #6b7280;
+  --text-3: #9ca3af;
+
+  /* Border */
+  --border: rgba(0, 0, 0, 0.06);
+
+  /* Brand */
+  --primary: #667eea;
+  --primary-hover: #5a67d8;
+  --primary-tint-1: rgba(102, 126, 234, 0.05);
+  --primary-tint-2: rgba(102, 126, 234, 0.1);
+}
+
+.dark {
+  /* Surfaces */
+  --bg: #0f1115;
+  --bg-elevated: rgba(16, 18, 22, 0.9);
+  --card: #151821;
+  --card-hover: #1a1f2b;
+
+  /* Text */
+  --text-1: #e5e7eb;
+  --text-2: #cbd5e1;
+  --text-3: #94a3b8;
+
+  /* Border */
+  --border: rgba(255, 255, 255, 0.08);
+
+  /* Brand */
+  --primary: #8ba4ff;
+  --primary-hover: #a1b3ff;
+  --primary-tint-1: rgba(139, 164, 255, 0.08);
+  --primary-tint-2: rgba(139, 164, 255, 0.15);
+}

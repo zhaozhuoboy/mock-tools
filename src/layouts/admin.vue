@@ -30,7 +30,7 @@ export default {
 .left {
   flex-shrink: 0;
   width: 256px;
-  background-color: #fafafa;
+  background-color: var(--card);
 }
 
 .right {
@@ -43,7 +43,7 @@ export default {
   position: sticky; top: 0; z-index: 100;
   flex-shrink: 0;
   width: 100%; height: 56px;
-  background-color: orchid;
+  background-color: var(--bg-elevated);
 }
 
 .main {

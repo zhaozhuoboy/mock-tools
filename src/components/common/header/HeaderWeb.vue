@@ -9,6 +9,22 @@
       </nav>
 
       <div class="account">
+        <ClientOnly>
+          <n-button
+            quaternary
+            circle
+            size="small"
+            class="theme-toggle"
+            aria-label="切换主题"
+            @click="toggleTheme"
+          >
+            <template #icon>
+              <n-icon size="16">
+                <span class="theme-icon">{{ isDark ? '🌙' : '☀️' }}</span>
+              </n-icon>
+            </template>
+          </n-button>
+        </ClientOnly>
         <!-- 使用 ClientOnly 避免 SSR 水合不匹配 -->
         <ClientOnly>
           <!-- 未登录状态 -->
@@ -36,7 +52,7 @@
               @select="handleUserMenuSelect"
               trigger="click"
             >
-              <n-button quaternary>
+              <n-button quaternary class="user-btn" aria-label="打开用户菜单">
                 <n-avatar 
                   :src="userStore.user?.avatar" 
                   size="small"
@@ -45,7 +61,7 @@
                 >
                   {{ userStore.user?.nickname?.[0] || userStore.user?.username?.[0] }}
                 </n-avatar>
-                {{ userStore.user?.nickname || userStore.user?.username }}
+                <span class="user-name">{{ userStore.user?.nickname || userStore.user?.username }}</span>
                 <n-icon style="margin-left: 8px">
                   <ChevronDownIcon />
                 </n-icon>
@@ -56,8 +72,8 @@
           <!-- 服务端渲染时的占位符 -->
           <template #fallback>
             <div style="display: flex; gap: 12px;">
-              <div style="width: 60px; height: 32px; background: #f0f0f0; border-radius: 4px;"></div>
-              <div style="width: 60px; height: 32px; background: #f0f0f0; border-radius: 4px;"></div>
+              <div style="width: 60px; height: 32px; background: var(--card-hover); border-radius: 6px;"></div>
+              <div style="width: 60px; height: 32px; background: var(--card-hover); border-radius: 6px;"></div>
             </div>
           </template>
         </ClientOnly>
@@ -67,6 +83,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, h } from 'vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/outline'
 import { NButton, NDropdown, NAvatar, NIcon } from 'naive-ui'
 import type { DropdownOption } from 'naive-ui'
@@ -75,6 +92,35 @@ import { useMessage } from 'naive-ui'
 
 const userStore = useUserStore()
 const message = useMessage()
+const isDark = ref(false)
+
+const applyTheme = (dark: boolean) => {
+  const root = document.documentElement
+  if (dark) root.classList.add('dark')
+  else root.classList.remove('dark')
+  try {
+    localStorage.setItem('theme', dark ? 'dark' : 'light')
+  } catch {}
+}
+
+const toggleTheme = () => {
+  isDark.value = !isDark.value
+  applyTheme(isDark.value)
+}
+
+onMounted(() => {
+  try {
+    const saved = localStorage.getItem('theme')
+    if (saved === 'dark' || saved === 'light') {
+      isDark.value = saved === 'dark'
+    } else if (window.matchMedia) {
+      isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
+    }
+  } catch {
+    isDark.value = false
+  }
+  applyTheme(isDark.value)
+})
 
 // 用户菜单选项
 const userMenuOptions: DropdownOption[] = [
@@ -124,9 +170,9 @@ const handleUserMenuSelect = async (key: string) => {
   align-items: center;
   justify-content: center;
   height: 64px;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-elevated);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--border);
 }
 
 .inner {
@@ -146,12 +192,12 @@ const handleUserMenuSelect = async (key: string) => {
   padding: 0 24px;
   font-size: 20px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-1);
   text-decoration: none;
   transition: all 0.3s ease;
   
   &:hover {
-    color: #667eea;
+    color: var(--primary);
     transform: scale(1.05);
   }
 }
@@ -165,7 +211,7 @@ const handleUserMenuSelect = async (key: string) => {
 }
 
 .nav-link {
-  color: #374151;
+  color: var(--text-1);
   text-decoration: none;
   font-weight: 500;
   font-size: 15px;
@@ -175,14 +221,14 @@ const handleUserMenuSelect = async (key: string) => {
   position: relative;
 
   &:hover {
-    background-color: rgba(102, 126, 234, 0.1);
-    color: #667eea;
+    background-color: var(--primary-tint-1);
+    color: var(--primary);
     transform: translateY(-1px);
   }
 
   &.router-link-active {
-    background-color: rgba(102, 126, 234, 0.15);
-    color: #667eea;
+    background-color: var(--primary-tint-2);
+    color: var(--primary);
     font-weight: 600;
     
     &::after {
@@ -193,7 +239,7 @@ const handleUserMenuSelect = async (key: string) => {
       transform: translateX(-50%);
       width: 20px;
       height: 2px;
-      background: #667eea;
+      background: var(--primary);
       border-radius: 1px;
     }
   }
@@ -205,6 +251,44 @@ const handleUserMenuSelect = async (key: string) => {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.user-btn {
+  max-width: 220px;
+  padding: 10px;
+  height: 32px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-1);
+  transition: background-color .2s ease, border-color .2s ease, transform .2s ease;
+  overflow: hidden;
+
+  &:hover {
+    background: var(--primary-tint-1);
+    border-color: var(--primary-tint-2);
+  }
+}
+
+.user-name {
+  display: inline-block;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  color: var(--text-1);
+}
+
+.theme-icon {
+  font-size: 16px;
+  font-style: normal;
 }
 
 /* 响应式设计 */

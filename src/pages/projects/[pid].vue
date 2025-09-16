@@ -303,12 +303,12 @@ onMounted(async () => {
     
     h2 {
       margin: 0 0 16px 0;
-      color: #d03050;
+      color: var(--primary);
     }
     
     p {
       margin: 0 0 24px 0;
-      color: #666;
+      color: var(--text-2);
     }
   }
 }
@@ -326,13 +326,13 @@ onMounted(async () => {
       margin: 0 0 12px 0;
       font-size: 28px;
       font-weight: 800;
-      color: #1f2937;
+      color: var(--text-1);
     }
     
     .description {
       margin: 0 0 16px 0;
       font-size: 16px;
-      color: #6b7280;
+      color: var(--text-2);
       line-height: 1.5;
       max-width: 600px;
     }
@@ -341,12 +341,12 @@ onMounted(async () => {
       display: flex;
       flex-wrap: wrap;
       gap: 16px;
-      color: #6b7280;
+      color: var(--text-2);
       
       .meta-item { 
         font-size: 14px;
         padding: 4px 8px;
-        background: #f3f4f6;
+        background: var(--card-hover);
         border-radius: 6px;
       }
     }
@@ -358,17 +358,17 @@ onMounted(async () => {
 }
 
 .api-list {
-  background: #fff;
+  background: var(--card);
   border-radius: 12px;
   padding: 16px;
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid var(--border);
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .empty {
   padding: 48px 24px;
   text-align: center;
-  color: #9ca3af;
+  color: var(--text-3);
   font-size: 16px;
 }
 

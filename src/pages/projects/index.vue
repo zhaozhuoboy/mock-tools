@@ -147,7 +147,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .projects-page {
-  background: #ffffff;
+  background: var(--bg);
   position: relative;
   min-height: 100vh;
 }

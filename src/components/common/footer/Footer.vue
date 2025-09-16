@@ -40,8 +40,8 @@ export default {
 <style lang="scss" scoped>
 .footer {
   width: 100%;
-  background: #f8fafc;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--card-hover);
+  border-top: 1px solid var(--border);
   padding: 24px 0;
 }
 
@@ -63,19 +63,19 @@ export default {
 
 .copyright {
   margin: 0;
-  color: #6b7280;
+  color: var(--text-2);
   font-size: 14px;
   line-height: 1.5;
 }
 
 .author-link {
-  color: #667eea;
+  color: var(--primary);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
   
   &:hover {
-    color: #5a67d8;
+    color: var(--primary-hover);
     text-decoration: underline;
   }
 }
@@ -90,7 +90,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #6b7280;
+  color: var(--text-2);
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
@@ -99,8 +99,8 @@ export default {
   border-radius: 6px;
   
   &:hover {
-    color: #667eea;
-    background: rgba(102, 126, 234, 0.1);
+    color: var(--primary);
+    background: var(--primary-tint-1);
     transform: translateY(-1px);
   }
   

@@ -28,7 +28,7 @@
 <style scoped>
 .auth-layout {
   min-height: 100vh;
-  background: white;
+  background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,7 +37,7 @@
 .auth-container {
   width: 100%;
   max-width: 500px;
-  background: white;
+  background: var(--card);
   overflow: visible;
 }
 
@@ -51,7 +51,7 @@
   align-items: center;
   gap: 0.75rem;
   text-decoration: none;
-  color: #374151;
+  color: var(--text-1);
   font-weight: 600;
   font-size: 1.25rem;
 }
@@ -65,7 +65,7 @@
 .logo-text {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #374151;
+  color: var(--text-1);
 }
 
 .auth-content {
@@ -78,7 +78,7 @@
 }
 
 .footer-text {
-  color: #6b7280;
+  color: var(--text-2);
   font-size: 0.875rem;
   margin: 0;
 }

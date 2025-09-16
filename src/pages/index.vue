@@ -202,7 +202,7 @@ onMounted(async () => {
 
 .features-section {
   padding: 100px 20px;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  background: linear-gradient(180deg, var(--bg) 0%, var(--card-hover) 100%);
   position: relative;
   
   &::before {
@@ -226,7 +226,7 @@ onMounted(async () => {
   font-size: 2.75rem;
   font-weight: 700;
   margin-bottom: 4rem;
-  color: #1f2937;
+  color: var(--text-1);
   position: relative;
   
   &::after {
@@ -251,13 +251,13 @@ onMounted(async () => {
 }
 
 .feature-card {
-  background: white;
+  background: var(--card);
   padding: 2.5rem 2rem;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   text-align: center;
   transition: all 0.3s ease;
-  border: 1px solid rgba(102, 126, 234, 0.1);
+  border: 1px solid var(--primary-tint-1);
   position: relative;
   overflow: hidden;
   
@@ -276,7 +276,7 @@ onMounted(async () => {
   &:hover {
     transform: translateY(-8px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-    border-color: rgba(102, 126, 234, 0.2);
+    border-color: var(--primary-tint-2);
     
     &::before {
       transform: scaleX(1);
@@ -307,12 +307,12 @@ onMounted(async () => {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: #1f2937;
+  color: var(--text-1);
   position: relative;
 }
 
 .feature-card p {
-  color: #6b7280;
+  color: var(--text-2);
   line-height: 1.7;
   font-size: 1rem;
   margin: 0;

@@ -248,7 +248,7 @@ onMounted(async () => {
     }
     
     .api-description {
-      color: #666;
+      color: var(--text-2);
       margin-bottom: 8px;
     }
     
