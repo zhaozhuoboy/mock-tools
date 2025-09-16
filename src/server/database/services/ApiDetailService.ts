@@ -9,7 +9,7 @@ export class ApiDetailService {
     try {
       const details = await ApiDetail.findAll({
         where: { api_id: apiId },
-        order: [['created_at', 'DESC']]
+        order: [['created_at', 'ASC']]
       })
       return details
     } catch (error) {
