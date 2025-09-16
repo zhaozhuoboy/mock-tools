@@ -37,14 +37,19 @@ export interface ApiResponse<T = any> {
 }
 
 export const useUserStore = defineStore('user', () => {
-  const user = ref<User | null>(null)
-  const token = ref<string | null>(null)
+  // 内部可修改的 ref
+  const _user = ref<User | null>(null)
+  const _token = ref<string | null>(null)
+
+  // 对外暴露的 computed readonly 版本
+  const user = computed(() => _user.value)
+  const token = computed(() => _token.value)
 
   /**
    * 设置token
    */
   const setToken = (newToken: string) => {
-    token.value = newToken
+    _token.value = newToken
     if (process.client) {
       localStorage.setItem('token', newToken)
     }
@@ -54,14 +59,14 @@ export const useUserStore = defineStore('user', () => {
    * 获取token
    */
   const getToken = () => {
-    return token.value
+    return _token.value
   }
 
   /**
    * 移除token
    */
   const removeToken = () => {
-    token.value = null
+    _token.value = null
     if (process.client) {
       localStorage.removeItem('token')
     }
@@ -71,14 +76,14 @@ export const useUserStore = defineStore('user', () => {
    * 设置用户信息
    */
   const setUser = (userData: User) => {
-    user.value = userData
+    _user.value = userData
   }
 
   /**
    * 清除用户信息
    */
   const clearUser = () => {
-    user.value = null
+    _user.value = null
     removeToken()
   }
 
@@ -186,12 +191,12 @@ export const useUserStore = defineStore('user', () => {
    * 检查是否已登录
    */
   const isLoggedIn = computed(() => {
-    return !!(user.value && token.value)
+    return !!(_user.value && _token.value)
   })
 
   return {
-    user: readonly(user),
-    token: readonly(token),
+    user,
+    token,
     isLoggedIn,
     setToken,
     getToken,

@@ -68,35 +68,19 @@
       </div>
     </NSpin>
 
-    <!-- 新建数据弹窗 -->
-    <NModal v-model:show="showCreateModal" preset="dialog" title="新建数据">
-      <NForm ref="formRef" :model="createForm" :rules="formRules">
-        <NFormItem label="数据名称" path="name">
-          <NInput v-model:value="createForm.name" placeholder="请输入数据名称" />
-        </NFormItem>
-        <NFormItem label="数据内容" path="payload">
-          <MonacoEditor
-            v-model:modelValue="createForm.payload"
-            :height="300"
-            :autoFormatOnMount="true"
-          />
-        </NFormItem>
-      </NForm>
-      
-      <template #action>
-        <NSpace>
-          <NButton @click="showCreateModal = false">取消</NButton>
-          <NButton type="primary" :loading="creating" @click="handleCreate">
-            创建
-          </NButton>
-        </NSpace>
-      </template>
-    </NModal>
+    <!-- 新建数据弹窗 - 懒加载 -->
+    <CreateApiDetailModal
+      v-if="showCreateModal"
+      :show="showCreateModal"
+      :api-id="apiId"
+      @update:show="showCreateModal = $event"
+      @success="handleCreateSuccess"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick, defineAsyncComponent } from 'vue'
 import { useRoute } from 'vue-router'
 import { PlusOutlined } from '@vicons/antd'
 import MonacoEditor from '@/components/common/MonacoEditor.vue'
@@ -108,17 +92,18 @@ import {
   NSelect, 
   NButton, 
   NIcon, 
-  NCode, 
-  NEmpty, 
-  NModal, 
-  NForm, 
-  NFormItem, 
-  NInput, 
-  NSpace,
+  NEmpty,
   useMessage 
 } from 'naive-ui'
-import type { FormInst, FormRules } from 'naive-ui'
-import type { ApiDetail, ApiInfoResponse, ApiDetailCreateParams, ApiDetailResponse } from '@/types/api-detail'
+import type { ApiDetail, ApiInfoResponse } from '@/types/api-detail'
+
+// 懒加载新建数据弹窗组件，预加载以保持动画效果
+const CreateApiDetailModal = defineAsyncComponent({
+  loader: () => import('@/components/projects/CreateApiDetailModal.vue'),
+  loadingComponent: () => null, // 不显示加载组件
+  delay: 0, // 立即开始加载
+  timeout: 3000 // 3秒超时
+})
 
 // 获取 message API
 const message = useMessage()
@@ -132,39 +117,10 @@ const apiId = route.params.apiId as string
 
 // 响应式数据
 const loading = ref(false)
-const creating = ref(false)
 const showCreateModal = ref(false)
 const apiInfo = ref<ApiInfoResponse['data']['api'] | null>(null)
 const details = ref<ApiDetail[]>([])
 const selectedDetailId = ref<string>('')
-
-// 表单相关
-const formRef = ref<FormInst | null>(null)
-const createForm = ref({
-  name: '',
-  payload: ''
-})
-
-const formRules: FormRules = {
-  name: [
-    { required: true, message: '请输入数据名称', trigger: 'blur' }
-  ],
-  payload: [
-    { required: true, message: '请输入数据内容', trigger: 'blur' },
-    {
-      validator: (rule, value) => {
-        if (!value) return true
-        try {
-          JSON.parse(value)
-          return true
-        } catch {
-          return new Error('请输入有效的 JSON 格式')
-        }
-      },
-      trigger: 'blur'
-    }
-  ]
-}
 
 // 计算属性
 const detailOptions = computed(() => {
@@ -240,42 +196,19 @@ const handleDetailChange = async (detailId: string) => {
   }
 }
 
-const handleCreate = async () => {
-  if (!formRef.value) return
-  
-  try {
-    await formRef.value.validate()
-    creating.value = true
-    
-    const params: ApiDetailCreateParams = {
-      apiId,
-      name: createForm.value.name,
-      payload: createForm.value.payload
-    }
-    
-    const response = await $fetch<ApiDetailResponse>('/api/project/interface/add', {
-      method: 'POST',
-      body: params
-    })
-    
-    if (response.success) {
-      // 重新加载数据
-      await loadApiInfo()
-      showCreateModal.value = false
-      createForm.value = { name: '', payload: '' }
-      message.success('创建成功')
-    }
-  } catch (error) {
-    console.error('创建数据失败:', error)
-    message.error('创建数据失败')
-  } finally {
-    creating.value = false
-  }
+const handleCreateSuccess = async () => {
+  // 重新加载数据
+  await loadApiInfo()
 }
 
 // 生命周期
-onMounted(() => {
-  loadApiInfo()
+onMounted(async () => {
+  await loadApiInfo()
+  
+  // 页面加载完成后，预加载弹窗组件以保持动画效果
+  await nextTick()
+  // 触发组件预加载
+  import('@/components/projects/CreateApiDetailModal.vue')
 })
 </script>
 

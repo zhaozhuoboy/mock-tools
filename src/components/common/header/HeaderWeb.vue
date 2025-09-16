@@ -9,47 +9,58 @@
       </nav>
 
       <div :class="$style['account']">
-        <!-- 未登录状态 -->
-        <template v-if="!userStore.isLoggedIn">
-          <n-button 
-            quaternary 
-            size="small" 
-            @click="navigateTo('/auth/login')"
-          >
-            登录
-          </n-button>
-          <n-button 
-            type="primary" 
-            size="small" 
-            @click="navigateTo('/auth/register')"
-          >
-            注册
-          </n-button>
-        </template>
-
-        <!-- 已登录状态 -->
-        <template v-else>
-          <n-dropdown
-            :options="userMenuOptions"
-            @select="handleUserMenuSelect"
-            trigger="click"
-          >
-            <n-button quaternary>
-              <n-avatar 
-                :src="userStore.user?.avatar" 
-                size="small"
-                round
-                style="margin-right: 8px"
-              >
-                {{ userStore.user?.nickname?.[0] || userStore.user?.username?.[0] }}
-              </n-avatar>
-              {{ userStore.user?.nickname || userStore.user?.username }}
-              <n-icon style="margin-left: 8px">
-                <ChevronDownIcon />
-              </n-icon>
+        <!-- 使用 ClientOnly 避免 SSR 水合不匹配 -->
+        <ClientOnly>
+          <!-- 未登录状态 -->
+          <template v-if="!userStore.isLoggedIn">
+            <n-button 
+              quaternary 
+              size="small" 
+              @click="navigateTo('/auth/login')"
+            >
+              登录
             </n-button>
-          </n-dropdown>
-        </template>
+            <n-button 
+              type="primary" 
+              size="small" 
+              @click="navigateTo('/auth/register')"
+            >
+              注册
+            </n-button>
+          </template>
+
+          <!-- 已登录状态 -->
+          <template v-else>
+            <n-dropdown
+              :options="userMenuOptions"
+              @select="handleUserMenuSelect"
+              trigger="click"
+            >
+              <n-button quaternary>
+                <n-avatar 
+                  :src="userStore.user?.avatar" 
+                  size="small"
+                  round
+                  style="margin-right: 8px"
+                >
+                  {{ userStore.user?.nickname?.[0] || userStore.user?.username?.[0] }}
+                </n-avatar>
+                {{ userStore.user?.nickname || userStore.user?.username }}
+                <n-icon style="margin-left: 8px">
+                  <ChevronDownIcon />
+                </n-icon>
+              </n-button>
+            </n-dropdown>
+          </template>
+          
+          <!-- 服务端渲染时的占位符 -->
+          <template #fallback>
+            <div style="display: flex; gap: 12px;">
+              <div style="width: 60px; height: 32px; background: #f0f0f0; border-radius: 4px;"></div>
+              <div style="width: 60px; height: 32px; background: #f0f0f0; border-radius: 4px;"></div>
+            </div>
+          </template>
+        </ClientOnly>
       </div>
     </div>
   </div>
