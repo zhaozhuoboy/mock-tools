@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     
     // 验证必要参数
-    if (!Number.isFinite(body.id)) {
+    if (!body.id || typeof body.id !== 'string' || body.id.trim().length === 0) {
       return { code: -1241, message: '无效的接口ID' }
     }
     if (!Number.isFinite(body.pid)) {
@@ -26,19 +26,19 @@ export default defineEventHandler(async (event) => {
     }
 
     // 验证接口是否存在
-    const existingApi = await Api.findByPk(body.id)
+    const existingApi = await Api.findByPk(body.id.trim())
     if (!existingApi) {
       return { code: -1245, message: '接口不存在' }
     }
 
     // 验证接口是否属于该项目
     const apiProjectId = (existingApi as any)?.project_id ?? (typeof (existingApi as any)?.get === 'function' ? (existingApi as any).get('project_id') : undefined)
-    if (Number(apiProjectId) !== projectId) {
+    if (String(apiProjectId) !== projectId) {
       return { code: -1246, message: '接口不属于该项目' }
     }
 
     // 执行删除
-    const deletedApi = await ApiService.deleteApi(body.id)
+    const deletedApi = await ApiService.deleteApi(body.id.trim())
     if (!deletedApi) {
       return { code: -1247, message: '删除失败' }
     }

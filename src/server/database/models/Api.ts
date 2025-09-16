@@ -1,8 +1,9 @@
 import { Model, DataTypes, Optional } from 'sequelize'
 import { sequelize } from '../config'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface ApiAttributes {
-  id: number
+  id: string // 使用 UUID 作为主键
   project_id: string // 改为字符串类型，对应 Project 的 UUID
   path: string
   method: 'get' | 'post' | 'put' | 'patch' | 'delete'
@@ -18,7 +19,12 @@ export class Api extends Model{}
 
 Api.init(
   {
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+    id: { 
+      type: DataTypes.STRING(36), 
+      defaultValue: () => uuidv4(), 
+      primaryKey: true, 
+      comment: '接口ID (UUID)' 
+    },
     project_id: { type: DataTypes.UUID, allowNull: false, comment: '关联项目ID (UUID)' },
     path: { type: DataTypes.STRING(255), allowNull: false, comment: '接口路径' },
     method: { type: DataTypes.ENUM('get', 'post', 'put', 'patch', 'delete'), allowNull: false, comment: 'HTTP 方法' },

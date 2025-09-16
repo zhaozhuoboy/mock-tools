@@ -141,7 +141,7 @@ export class ApiService {
    * @param data 接口数据
    * @returns 
    */
-  static async update(id: number, data: Partial<ApiAttributes>): Promise<Api | null> {
+  static async update(id: string, data: Partial<ApiAttributes>): Promise<Api | null> {
     const api = await Api.findByPk(id)
     if (!api) {
       return null
@@ -155,7 +155,7 @@ export class ApiService {
    * @param id 接口ID
    * @returns 
    */
-  static async deleteApi(id: number): Promise<Api | null> {
+  static async deleteApi(id: string): Promise<Api | null> {
     const api = await Api.findByPk(id)
     if (!api) {
       return null

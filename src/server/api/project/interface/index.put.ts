@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     console.log('body', body)
     
     // 验证必要参数
-    if (!Number.isFinite(body.id)) {
+    if (!body.id || typeof body.id !== 'string' || body.id.trim().length === 0) {
       return { code: -1221, message: '无效的接口ID' }
     }
     if (!Number.isFinite(body.pid)) {
@@ -28,14 +28,14 @@ export default defineEventHandler(async (event) => {
     }
 
     // 验证接口是否存在
-    const existingApi = await Api.findByPk(body.id)
+    const existingApi = await Api.findByPk(body.id.trim())
     if (!existingApi) {
       return { code: -1225, message: '接口不存在' }
     }
 
     // 验证接口是否属于该项目
     const apiProjectId = (existingApi as any)?.project_id ?? (typeof (existingApi as any)?.get === 'function' ? (existingApi as any).get('project_id') : undefined)
-    if (Number(apiProjectId) !== projectId) {
+    if (String(apiProjectId) !== projectId) {
       return { code: -1226, message: '接口不属于该项目' }
     }
 
@@ -86,7 +86,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // 执行更新
-    const updatedApi = await ApiService.update(body.id, updateData)
+    const updatedApi = await ApiService.update(body.id.trim(), updateData)
     if (!updatedApi) {
       return { code: -1232, message: '更新失败' }
     }
