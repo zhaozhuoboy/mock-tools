@@ -21,6 +21,7 @@
     "nuxtjs-naive-ui": "^1.0.2",
     "pinia": "^2.1.7",
     "sequelize": "^6.37.7",
+    "uuid": "^13.0.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },

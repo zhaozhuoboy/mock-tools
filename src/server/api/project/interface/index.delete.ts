@@ -20,8 +20,8 @@ export default defineEventHandler(async (event) => {
     }
 
     const rawId = (project as any)?.id ?? (typeof (project as any)?.get === 'function' ? (project as any).get('id') : undefined)
-    const projectId = Number(rawId)
-    if (!Number.isFinite(projectId)) {
+    const projectId = String(rawId).trim()
+    if (!projectId) {
       return { code: -1244, message: '项目主键无效' }
     }
 

@@ -1,9 +1,10 @@
 import { Model, DataTypes, Optional } from 'sequelize'
 import { sequelize } from '../config'
+import { v4 as uuidv4 } from 'uuid'
 
 // 项目接口定义
 export interface ProjectAttributes {
-  id: number
+  id: string // 使用 UUID 作为主键
   pid: number // 项目唯一标识
   name: string
   description?: string
@@ -23,10 +24,10 @@ export class Project extends Model {}
 Project.init(
   {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.STRING(36),
+      defaultValue: () => uuidv4(),
       primaryKey: true,
-      comment: '项目ID'
+      comment: '项目ID (UUID)'
     },
     pid: {
       type: DataTypes.INTEGER,

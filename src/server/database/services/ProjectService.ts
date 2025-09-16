@@ -64,7 +64,7 @@ export class ProjectService {
   /**
    * 根据ID获取项目
    */
-  static async getProjectById(id: number): Promise<Project | null> {
+  static async getProjectById(id: string): Promise<Project | null> {
     try {
       const project = await Project.findByPk(id)
       return project
@@ -90,7 +90,7 @@ export class ProjectService {
   /**
    * 更新项目
    */
-  static async updateProject(id: number, data: Partial<ProjectAttributes>): Promise<Project | null> {
+  static async updateProject(id: string, data: Partial<ProjectAttributes>): Promise<Project | null> {
     try {
       const project = await Project.findByPk(id)
       if (!project) {
@@ -107,7 +107,7 @@ export class ProjectService {
   /**
    * 删除项目
    */
-  static async deleteProject(id: number): Promise<boolean> {
+  static async deleteProject(id: string): Promise<boolean> {
     try {
       const project = await Project.findByPk(id)
       if (!project) {
@@ -123,7 +123,7 @@ export class ProjectService {
 }
 
 export class ApiService {
-  static async listByProject(projectId: number): Promise<Api[]> {
+  static async listByProject(projectId: string): Promise<Api[]> {
     return Api.findAll({ where: { project_id: projectId }, order: [['created_at', 'DESC']] })
   }
   /**
@@ -132,7 +132,7 @@ export class ApiService {
    * @param data 接口数据
    * @returns 创建的接口
    */
-  static async create(projectId: number, data: ApiCreationAttributes): Promise<Api> {
+  static async create(projectId: string, data: ApiCreationAttributes): Promise<Api> {
     return Api.create({ ...data, project_id: projectId })
   }
   /**
@@ -168,7 +168,7 @@ export class ApiService {
    * @param projectId 项目ID
    * @returns 接口数量
    */
-  static async countByProject(projectId: number): Promise<number> {
+  static async countByProject(projectId: string): Promise<number> {
     return Api.count({ where: { project_id: projectId } })
   }
 }

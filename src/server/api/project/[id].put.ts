@@ -3,8 +3,8 @@ import { ProjectService } from '~/server/database/services/ProjectService'
 export default defineEventHandler(async (event) => {
   try {
     const { id } = getRouterParams(event)
-    const projectId = Number(id)
-    if (!projectId || Number.isNaN(projectId)) {
+    const projectId = String(id).trim()
+    if (!projectId) {
       return { code: -1101, message: '无效的项目ID' }
     }
 

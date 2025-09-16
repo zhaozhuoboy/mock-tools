@@ -15,8 +15,8 @@ export const setupAssociations = () => {
   User.hasMany(Project, { foreignKey: 'owner_id', as: 'projects', constraints: false })
   Project.belongsTo(User, { foreignKey: 'owner_id', as: 'owner', constraints: false })
   // 项目与接口的关联
-  Project.hasMany(Api, { foreignKey: 'project_id', as: 'apis' })
-  Api.belongsTo(Project, { foreignKey: 'project_id', as: 'project' })
+  Project.hasMany(Api, { foreignKey: 'project_id', as: 'apis', constraints: false })
+  Api.belongsTo(Project, { foreignKey: 'project_id', as: 'project', constraints: false })
   // 项目与分组的关联：以 Project.pid 作为目标键，api_groups.project_id 存 pid
   Project.hasMany(ApiGroup, { foreignKey: 'project_id', as: 'groups', sourceKey: 'pid', constraints: false })
   ApiGroup.belongsTo(Project, { foreignKey: 'project_id', as: 'project', targetKey: 'pid', constraints: false })

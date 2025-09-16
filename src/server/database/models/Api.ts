@@ -3,7 +3,7 @@ import { sequelize } from '../config'
 
 export interface ApiAttributes {
   id: number
-  project_id: number
+  project_id: string // 改为字符串类型，对应 Project 的 UUID
   path: string
   method: 'get' | 'post' | 'put' | 'patch' | 'delete'
   group?: string
@@ -19,7 +19,7 @@ export class Api extends Model{}
 Api.init(
   {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    project_id: { type: DataTypes.INTEGER, allowNull: false, comment: '关联项目ID' },
+    project_id: { type: DataTypes.UUID, allowNull: false, comment: '关联项目ID (UUID)' },
     path: { type: DataTypes.STRING(255), allowNull: false, comment: '接口路径' },
     method: { type: DataTypes.ENUM('get', 'post', 'put', 'patch', 'delete'), allowNull: false, comment: 'HTTP 方法' },
     group: { type: DataTypes.STRING(100), allowNull: true, comment: '所属分组' },

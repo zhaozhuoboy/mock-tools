@@ -12,8 +12,8 @@ export default defineEventHandler(async (event) => {
       return { code: -1203, message: '项目不存在', data: [] }
     }
     const rawId = (project as any)?.id ?? (typeof (project as any)?.get === 'function' ? (project as any).get('id') : undefined)
-    const projectId = Number(rawId)
-    if (!Number.isFinite(projectId)) {
+    const projectId = String(rawId).trim()
+    if (!projectId) {
       return { code: -1204, message: '项目主键无效', data: [] }
     }
     const list = await ApiService.listByProject(projectId)
