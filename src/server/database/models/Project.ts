@@ -32,7 +32,7 @@ Project.init(
     pid: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
+      unique: 'true',
       comment: '项目唯一标识'
     },
     name: {

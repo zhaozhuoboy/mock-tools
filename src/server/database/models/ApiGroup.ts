@@ -11,9 +11,7 @@ export interface ApiGroupAttributes {
 
 export interface ApiGroupCreationAttributes extends Optional<ApiGroupAttributes, 'id' | 'created_at' | 'updated_at'> {}
 
-export class ApiGroup extends Model<ApiGroupAttributes, ApiGroupCreationAttributes> implements ApiGroupAttributes {
-  // 移除公共字段声明，让 Sequelize 完全管理属性访问器
-}
+export class ApiGroup extends Model {}
 
 ApiGroup.init(
   {

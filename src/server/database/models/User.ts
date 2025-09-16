@@ -36,20 +36,20 @@ User.init(
     uid: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
+      unique: 'true',
       comment: '用户唯一标识',
       defaultValue: 100000 // 设置初始值
     },
     username: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      unique: true,
+      unique: 'true',
       comment: '用户名'
     },
     email: {
       type: DataTypes.STRING(100),
       allowNull: false,
-      unique: true,
+      unique: 'true',
       validate: {
         isEmail: true
       },

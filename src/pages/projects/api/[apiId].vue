@@ -18,7 +18,7 @@
               <div class="project-info" v-if="apiInfo?.project">
                 <NText depth="3">
                   项目：{{ apiInfo.project.name }}
-                  <span v-if="apiInfo.project.host"> | 主机：{{ apiInfo.project.host }}</span>
+                  <span v-if="apiInfo.project.host"> | Host：{{ apiInfo.project.host }}</span>
                 </NText>
               </div>
             </div>
@@ -47,10 +47,7 @@
         <NCard v-if="currentDetail">
           <template #header>
             <div class="detail-header">
-              <span>{{ currentDetail.name }}</span>
-              <NTag v-if="currentDetail.is_active" type="success" size="small">
-                当前使用
-              </NTag>
+              <span>当前数据：{{ currentDetail.name }}</span>
             </div>
           </template>
           
@@ -117,7 +114,7 @@ const selectedDetailId = ref<string>('')
 // 计算属性
 const detailOptions = computed(() => {
   return details.value.map((detail: ApiDetail) => ({
-    label: `${detail.name}${detail.is_active ? ' (当前使用)' : ''}`,
+    label: `${detail.name}`,
     value: detail.id
   }))
 })
@@ -257,7 +254,6 @@ onMounted(async () => {
   }
   
   .detail-content {
-    margin-top: 16px;
   }
 }
 

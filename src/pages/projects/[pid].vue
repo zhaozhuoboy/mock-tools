@@ -35,7 +35,15 @@
       <div class="mock-url">
         <NInputGroup>
           <NInputGroupLabel>Mock URL:</NInputGroupLabel>
-          <NInput :value="mockUrl" disabled readonly style="flex: 1;" />
+          <NTooltip
+            content="点击复制"
+            placement="top"
+          >
+            <template #trigger>
+              <NInput :value="mockUrl" disabled readonly style="flex: 1;" />
+            </template>
+            <span>MockTools域名/proxy/用户ID/项目ID/接口路径</span>
+          </NTooltip>
         </NInputGroup>
         <NButton type="primary" ghost @click="copyMockUrl">复制</NButton>
       </div>
@@ -71,7 +79,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { NButton, useMessage, useDialog, NSkeleton, NInput, NInputGroup, NInputGroupLabel } from 'naive-ui'
+import { NButton, useMessage, useDialog, NSkeleton, NInput, NInputGroup, NInputGroupLabel, NTooltip } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import ApiItem from '@/components/projects/ApiItem.vue'
 import CreateApiModal from '@/components/projects/CreateApiModal.vue'
