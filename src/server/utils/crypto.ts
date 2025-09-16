@@ -1,4 +1,7 @@
-import { randomBytes, createHash } from 'crypto'
+import { randomBytes, createHash, scrypt } from 'crypto'
+import { promisify } from 'util'
+
+const scryptAsync = promisify(scrypt)
 
 /**
  * 生成唯一标识符
@@ -23,18 +26,33 @@ export const generateRandomString = (length: number = 32): string => {
 }
 
 /**
- * 密码加密
+ * 生成盐值
  */
-export const hashPassword = (password: string): string => {
-  return createHash('sha256').update(password).digest('hex')
+export const generateSalt = (): string => {
+  return randomBytes(16).toString('hex')
+}
+
+/**
+ * 密码加密 - 使用scrypt算法加盐加密
+ */
+export const hashPassword = async (password: string): Promise<string> => {
+  const salt = generateSalt()
+  const hashedPassword = await scryptAsync(password, salt, 64) as Buffer
+  return `${salt}:${hashedPassword.toString('hex')}`
 }
 
 /**
  * 验证密码
  */
-export const verifyPassword = (password: string, hashedPassword: string): boolean => {
-  const hashed = hashPassword(password)
-  return hashed === hashedPassword
+export const verifyPassword = async (password: string, hashedPassword: string): Promise<boolean> => {
+  try {
+    const [salt, hash] = hashedPassword.split(':')
+    const hashBuffer = Buffer.from(hash, 'hex')
+    const derivedKey = await scryptAsync(password, salt, 64) as Buffer
+    return derivedKey.equals(hashBuffer)
+  } catch (error) {
+    return false
+  }
 }
 
 /**

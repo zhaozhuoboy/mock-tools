@@ -1,4 +1,10 @@
+import { useUserStore } from "@/store/user"
+
 export default defineNuxtRouteMiddleware((to, from) => {
-  // isAuthenticated() is an example method verifying if a user is authenticated
-  console.log('use auth middeware === 在此处理校验登录态的逻辑')
+  const userStore = useUserStore()
+  
+  // 如果用户未登录，重定向到登录页面
+  if (!userStore.isLoggedIn) {
+    return navigateTo(`/auth/login?redirect=${encodeURIComponent(to.fullPath)}`)
+  }
 })

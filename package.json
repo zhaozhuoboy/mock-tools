@@ -12,10 +12,13 @@
   "author": "",
   "homepage": "",
   "dependencies": {
+    "@heroicons/vue": "^2.2.0",
     "@pinia/nuxt": "^0.5.1",
+    "@types/jsonwebtoken": "^9.0.10",
     "@vicons/antd": "^0.13.0",
     "chalk": "^5.4.1",
     "h3": "^1.15.4",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.3",
     "naive-ui": "^2.38.2",
     "nuxt": "^3.19.2",
@@ -24,7 +27,8 @@
     "sequelize": "^6.37.7",
     "uuid": "^13.0.0",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "zod": "^4.1.8"
   },
   "devDependencies": {
     "@types/ali-oss": "^6.16.11",

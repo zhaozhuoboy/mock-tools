@@ -1,7 +1,7 @@
 <template>
   <div class="projects-page">
     <!-- 背景装饰 -->
-    <BackgroundDecoration />
+    <!-- <BackgroundDecoration /> -->
 
     <!-- 页面头部 -->
     <ProjectHeader 
@@ -62,7 +62,8 @@ import CreateProjectModal from '../../components/projects/CreateProjectModal.vue
 
 // 页面元信息
 definePageMeta({
-  layout: 'default'
+  layout: 'default',
+  middleware: 'auth'
 })
 
 useHead({
@@ -149,7 +150,6 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .projects-page {
-  min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
   overflow: hidden;

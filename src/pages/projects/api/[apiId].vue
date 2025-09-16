@@ -118,7 +118,10 @@ import type { ApiDetail, ApiInfoResponse, ApiDetailCreateParams, ApiDetailRespon
 // 获取 message API
 const message = useMessage()
 
-definePageMeta({ layout: 'default' })
+definePageMeta({ 
+  layout: 'default',
+  middleware: 'auth'
+})
 
 const route = useRoute()
 const apiId = route.params.apiId as string

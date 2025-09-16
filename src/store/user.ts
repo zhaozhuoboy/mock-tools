@@ -1,0 +1,193 @@
+import { defineStore } from 'pinia'
+
+export interface User {
+  id: number
+  uid: number
+  username: string
+  email: string
+  avatar?: string
+  nickname?: string
+  phone?: string
+  status: 'active' | 'inactive' | 'banned'
+  role: 'admin' | 'user' | 'guest'
+  last_login_at?: string
+  created_at: string
+  updated_at: string
+}
+
+export interface LoginData {
+  username: string
+  password: string
+}
+
+export interface RegisterData {
+  username: string
+  email: string
+  password: string
+  nickname?: string
+  phone?: string
+}
+
+export const useUserStore = defineStore('user', () => {
+  const user = ref<User | null>(null)
+  const token = ref<string | null>(null)
+
+  /**
+   * 设置token
+   */
+  const setToken = (newToken: string) => {
+    token.value = newToken
+    if (process.client) {
+      localStorage.setItem('token', newToken)
+    }
+  }
+
+  /**
+   * 获取token
+   */
+  const getToken = () => {
+    if (process.client && !token.value) {
+      token.value = localStorage.getItem('token')
+    }
+    return token.value
+  }
+
+  /**
+   * 移除token
+   */
+  const removeToken = () => {
+    token.value = null
+    if (process.client) {
+      localStorage.removeItem('token')
+    }
+  }
+
+  /**
+   * 设置用户信息
+   */
+  const setUser = (userData: User) => {
+    user.value = userData
+  }
+
+  /**
+   * 清除用户信息
+   */
+  const clearUser = () => {
+    user.value = null
+    removeToken()
+  }
+
+  /**
+   * 用户登录
+   */
+  const login = async (loginData: LoginData) => {
+    try {
+      const { data } = await $fetch('/api/user/login', {
+        method: 'POST',
+        body: loginData
+      })
+
+      if (data?.token && data?.user) {
+        setToken(data.token)
+        setUser(data.user)
+        return { success: true, data: data.user }
+      } else {
+        return { success: false, message: '登录失败' }
+      }
+    } catch (error: any) {
+      return { 
+        success: false, 
+        message: error.data?.message || '登录失败，请稍后重试' 
+      }
+    }
+  }
+
+  /**
+   * 用户注册
+   */
+  const register = async (registerData: RegisterData) => {
+    try {
+      const { data } = await $fetch('/api/user/register', {
+        method: 'POST',
+        body: registerData
+      })
+
+      return { success: true, data }
+    } catch (error: any) {
+      return { 
+        success: false, 
+        message: error.data?.message || '注册失败，请稍后重试' 
+      }
+    }
+  }
+
+  /**
+   * 获取当前用户信息
+   */
+  const fetchUserInfo = async () => {
+    try {
+      const token = getToken()
+      if (!token) {
+        return { success: false, message: '未登录' }
+      }
+
+      const { data } = await $fetch('/api/user/me', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      if (data) {
+        setUser(data)
+        return { success: true, data }
+      } else {
+        return { success: false, message: '获取用户信息失败' }
+      }
+    } catch (error: any) {
+      clearUser()
+      return { 
+        success: false, 
+        message: error.data?.message || '获取用户信息失败' 
+      }
+    }
+  }
+
+  /**
+   * 用户登出
+   */
+  const logout = async () => {
+    try {
+      // 调用登出API
+      await $fetch('/api/user/logout', {
+        method: 'POST'
+      })
+    } catch (error) {
+      console.error('登出API调用失败:', error)
+    } finally {
+      // 无论API调用是否成功，都要清除本地状态
+      clearUser()
+    }
+  }
+
+  /**
+   * 检查是否已登录
+   */
+  const isLoggedIn = computed(() => {
+    return !!(user.value && token.value)
+  })
+
+  return {
+    user: readonly(user),
+    token: readonly(token),
+    isLoggedIn,
+    setToken,
+    getToken,
+    removeToken,
+    setUser,
+    clearUser,
+    login,
+    register,
+    fetchUserInfo,
+    logout
+  }
+})

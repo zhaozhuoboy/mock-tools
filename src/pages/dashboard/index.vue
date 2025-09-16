@@ -17,14 +17,17 @@ export default {
   name: 'page-dashboard',
   setup () {
     definePageMeta({
-      layout: 'admin'
+      layout: 'admin',
+      middleware: 'auth'
     })
   }
 }
 </script>
 
 <style lang="scss" module>
-.page-dashboard {}
+.page-dashboard {
+  padding: 20px;
+}
 
 .content {
   min-height: 3000px;

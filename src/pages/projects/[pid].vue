@@ -71,7 +71,10 @@ import CreateApiModal from '@/components/projects/CreateApiModal.vue'
 import ajax from '@/utils/http'
 import type { Project } from '@/types/project'
 
-definePageMeta({ layout: 'default' })
+definePageMeta({ 
+  layout: 'default',
+  middleware: 'auth'
+})
 
 interface ApiDef { id: string; path: string; group?: string; method: 'get' | 'post' | 'put' | 'patch' | 'delete', description?: string }
 

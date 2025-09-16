@@ -1,0 +1,104 @@
+<template>
+  <div class="auth-layout">
+    <div class="auth-container">
+      <div class="auth-header">
+        <NuxtLink to="/" class="logo-link">
+          <img src="/logo.png" alt="Logo" class="logo" />
+          <span class="logo-text">Mock Tool</span>
+        </NuxtLink>
+      </div>
+      
+      <div class="auth-content">
+        <slot />
+      </div>
+      
+      <div class="auth-footer">
+        <p class="footer-text">
+          © 2024 Mock Tool. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+// 认证页面布局，用于登录和注册页面
+</script>
+
+<style scoped>
+.auth-layout {
+  min-height: 100vh;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  overflow: visible;
+}
+
+.auth-header {
+  padding: 1rem 2rem 0.5rem;
+  text-align: center;
+}
+
+.logo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: #374151;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.logo {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.auth-content {
+  padding: 1rem 2rem;
+}
+
+.auth-footer {
+  padding: 0.5rem 2rem 1rem;
+  text-align: center;
+}
+
+.footer-text {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 640px) {
+  .auth-container {
+    margin: 1rem;
+  }
+  
+  .auth-header {
+    padding: 0.75rem 1.5rem 0.25rem;
+  }
+  
+  .auth-content {
+    padding: 0.75rem 1.5rem;
+  }
+  
+  .auth-footer {
+    padding: 0.25rem 1.5rem 0.75rem;
+  }
+}
+</style>
