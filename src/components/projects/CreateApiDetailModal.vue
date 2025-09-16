@@ -7,11 +7,19 @@
     @update:show="emit('update:show', $event)"
   >
     <NDrawerContent>
+      <NSpace justify="end">
+        <NButton type="primary" @click="handleFillPreset">
+          填充预置数据
+        </NButton>
+      </NSpace>
       <NForm ref="formRef" :model="form" :rules="formRules" label-placement="top">
-        <NFormItem label="数据名称" path="name">
-          <NInput v-model:value="form.name" placeholder="请输入数据名称" />
+        <NFormItem label="数据标签" path="name">
+          <NInput v-model:value="form.name" placeholder="请输入数据标签" />
         </NFormItem>
-        <NFormItem label="数据内容" path="payload">
+        <NFormItem path="payload">
+          <template #label>
+            数据内容
+          </template>
           <MonacoEditor
             v-model:modelValue="form.payload"
             :height="'calc(100vh - 420px)'"
@@ -77,7 +85,7 @@ const form = ref({
 
 const formRules: FormRules = {
   name: [
-    { required: true, message: '请输入数据名称', trigger: 'blur' }
+    { required: true, message: '请输入数据标签', trigger: 'blur' }
   ],
   payload: [
     { required: true, message: '请输入数据内容', trigger: 'blur' },
@@ -138,5 +146,16 @@ const handleSubmit = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const handleFillPreset = () => {
+  const preset = {
+    code: 0,
+    data: {
+      name: '测试数据',
+    },
+    message: 'success'
+  }
+  form.value.payload = JSON.stringify(preset, null, 2)
 }
 </script>
