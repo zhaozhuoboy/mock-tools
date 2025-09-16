@@ -1,33 +1,55 @@
 <template>
   <div class="project-detail-page">
-    <div class="header">
-      <div class="info">
-        <h1 class="name">{{ project.name || '未命名项目' }}</h1>
-        <div class="meta">
-          <span class="meta-item">项目ID：{{ project.pid }}</span>
-          <span class="meta-item">接口数量：{{ apis.length }}</span>
+    <!-- 加载状态 -->
+    <div v-if="loading" class="loading-container">
+      <NSkeleton height="60px" width="100%" style="margin-bottom: 16px;" />
+      <NSkeleton height="200px" width="100%" />
+    </div>
+    
+    <!-- 错误状态 -->
+    <div v-else-if="error" class="error-container">
+      <div class="error-content">
+        <h2>加载失败</h2>
+        <p>{{ error }}</p>
+        <NButton type="primary" @click="loadProjectInfo">重新加载</NButton>
+      </div>
+    </div>
+    
+    <!-- 正常内容 -->
+    <div v-else-if="project">
+      <div class="header">
+        <div class="info">
+          <h1 class="name">{{ project.name }}</h1>
+          <div class="description" v-if="project.description">{{ project.description }}</div>
+          <div class="meta">
+            <span class="meta-item">项目ID：{{ project.pid }}</span>
+            <span class="meta-item">接口数量：{{ apis.length }}</span>
+            <span class="meta-item" v-if="project.host">域名：{{ project.host }}</span>
+            <span class="meta-item">创建时间：{{ formatDate(project.created_at) }}</span>
+          </div>
+        </div>
+        <div class="actions">
+          <NButton type="primary" round @click="onCreateApi">新建接口</NButton>
         </div>
       </div>
-      <div class="actions">
-        <NButton type="primary" round @click="onCreateApi">新建接口</NButton>
+
+      <div class="api-list">
+        <ApiItem
+          v-for="(api, idx) in apis"
+          :key="api.id"
+          :path="api.path"
+          :group="api.group"
+          :method="api.method"
+          :description="api.description"
+          :api-data="api"
+          :last="idx === apis.length - 1"
+          @edit="onEditApi"
+          @delete="onDeleteApi"
+        />
+        <div v-if="apis.length === 0" class="empty">暂无接口</div>
       </div>
     </div>
-
-    <div class="api-list">
-      <ApiItem
-        v-for="(api, idx) in apis"
-        :key="api.id"
-        :path="api.path"
-        :group="api.group"
-        :method="api.method"
-        :description="api.description"
-        :api-data="api"
-        :last="idx === apis.length - 1"
-        @edit="onEditApi"
-        @delete="onDeleteApi"
-      />
-      <div v-if="apis.length === 0" class="empty">暂无接口</div>
-    </div>
+    
     <CreateApiModal
       :edit-data="currentApi"
       :show="showCreateApi"
@@ -38,23 +60,25 @@
       @cancel="showCreateApi = false"
     />
   </div>
-  
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { NButton, useMessage, useDialog } from 'naive-ui'
+import { NButton, useMessage, useDialog, NSkeleton } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import ApiItem from '@/components/projects/ApiItem.vue'
 import CreateApiModal from '@/components/projects/CreateApiModal.vue'
 import ajax from '@/utils/http'
+import type { Project } from '@/types/project'
 
 definePageMeta({ layout: 'default' })
 
 interface ApiDef { id: string; path: string; group?: string; method: 'get' | 'post' | 'put' | 'patch' | 'delete', description?: string }
-interface ProjectLite { pid: number | string; name: string }
 
-const project = ref<ProjectLite>({ pid: Number(useRoute().params.pid), name: '示例项目' })
+const route = useRoute()
+const project = ref<Project | null>(null)
+const loading = ref(true)
+const error = ref<string | null>(null)
 const message = useMessage()
 const dialog = useDialog()
 const apis = ref<ApiDef[]>([])
@@ -63,12 +87,59 @@ const creatingApi = ref(false)
 const updatingApi = ref(false)
 const currentApi = ref<ApiDef | null>(null)
 
-useHead({
-  title: project.value.name + ' - 项目详情'
-})
-
 const router = useRouter()
+
+// 格式化日期
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+
+// 加载项目详细信息
+const loadProjectInfo = async () => {
+  try {
+    loading.value = true
+    error.value = null
+    
+    const pid = route.params.pid as string
+    console.log('loadProjectInfo', pid)
+    const res: any = await ajax({ 
+      url: `/api/project/${pid}`, 
+      method: 'get' 
+    }).catch(err => {
+      if (err.code === -1003) {
+        router.replace('/404')
+        return
+      }
+      return err
+    })
+    
+    project.value = res.project
+    // 更新页面标题
+    if (project.value) {
+      useHead({
+        title: `${project.value.name}`,
+        meta: [
+          { name: 'description', content: project.value.description || `项目 ${project.value.name} 的接口管理页面` }
+        ]
+      })
+    }
+  } catch (err: any) {
+    error.value = err?.message || '加载项目信息失败'
+    console.error('加载项目信息失败:', err)
+  } finally {
+    loading.value = false
+  }
+}
 const loadApis = async () => {
+  if (!project.value) return
+  
   const res: any = await ajax({ url: `/api/project/interface/${project.value.pid}`, method: 'get' }).catch(err => err)
   // 当项目不存在时，接口会返回业务错误 code（非 0）且 data: []
   if (res && res.api === 1) {
@@ -86,6 +157,8 @@ const onCreateApi = () => { showCreateApi.value = true }
 const handleCreateApi = async (...args: any[]) => {
   console.log('handleCreateApi', args)
   const data = args[0]
+  if (!project.value) return
+  
   try {
     creatingApi.value = true
     const postData = {
@@ -106,7 +179,7 @@ const onEditApi = (api: ApiDef) => {
 }
 
 const onDeleteApi = async (api: ApiDef) => { 
-  if (!api || !api.id) {
+  if (!api || !api.id || !project.value) {
     message.error('接口数据无效')
     return
   }
@@ -124,7 +197,7 @@ const onDeleteApi = async (api: ApiDef) => {
           method: 'delete', 
           data: { 
             id: api.id,
-            pid: project.value?.pid 
+            pid: project.value!.pid 
           } 
         })
         await loadApis() 
@@ -138,7 +211,7 @@ const onDeleteApi = async (api: ApiDef) => {
 }
 
 const handleUpdateApi = async (data: any) => {
-  if (!currentApi.value) return
+  if (!currentApi.value || !project.value) return
   
   try {
     updatingApi.value = true
@@ -164,7 +237,12 @@ const handleUpdateApi = async (data: any) => {
   }
 }
 
-onMounted(() => { loadApis() })
+onMounted(async () => { 
+  await loadProjectInfo()
+  if (project.value) {
+    await loadApis()
+  }
+})
 </script>
 
 <style scoped lang="scss">
@@ -175,38 +253,88 @@ onMounted(() => { loadApis() })
   padding: 24px;
 }
 
+.loading-container {
+  padding: 24px;
+}
+
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  
+  .error-content {
+    text-align: center;
+    
+    h2 {
+      margin: 0 0 16px 0;
+      color: #d03050;
+    }
+    
+    p {
+      margin: 0 0 24px 0;
+      color: #666;
+    }
+  }
+}
+
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
+  align-items: flex-start;
+  margin-bottom: 24px;
   
   .info {
+    flex: 1;
+    
     .name {
-      margin: 0 0 8px 0;
+      margin: 0 0 12px 0;
       font-size: 28px;
       font-weight: 800;
+      color: #1f2937;
     }
+    
+    .description {
+      margin: 0 0 16px 0;
+      font-size: 16px;
+      color: #6b7280;
+      line-height: 1.5;
+      max-width: 600px;
+    }
+    
     .meta {
       display: flex;
+      flex-wrap: wrap;
       gap: 16px;
-      color: #666;
-      .meta-item { font-size: 13px; }
+      color: #6b7280;
+      
+      .meta-item { 
+        font-size: 14px;
+        padding: 4px 8px;
+        background: #f3f4f6;
+        border-radius: 6px;
+      }
     }
+  }
+  
+  .actions {
+    margin-left: 24px;
   }
 }
 
 .api-list {
   background: #fff;
   border-radius: 12px;
-  padding: 12px 16px;
+  padding: 16px;
   border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .empty {
-  padding: 24px;
+  padding: 48px 24px;
   text-align: center;
-  color: #999;
+  color: #9ca3af;
+  font-size: 16px;
 }
 </style>
 
