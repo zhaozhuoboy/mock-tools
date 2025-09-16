@@ -48,6 +48,7 @@ export interface ApiInfoResponse {
       created_at: string
       updated_at: string
       project?: {
+        pid?: number
         name: string
         host?: string
       }

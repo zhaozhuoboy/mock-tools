@@ -1,5 +1,19 @@
 <template>
   <div class="page-api">
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
+      <NBreadcrumb>
+        <NBreadcrumbItem>
+          <NuxtLink to="/projects">项目列表</NuxtLink>
+        </NBreadcrumbItem>
+        <NBreadcrumbItem>
+          <NuxtLink v-if="apiInfo?.project?.pid" :to="`/projects/${apiInfo?.project?.pid}`">项目详情</NuxtLink>
+          <span v-else>项目详情</span>
+        </NBreadcrumbItem>
+        <NBreadcrumbItem>接口详情</NBreadcrumbItem>
+      </NBreadcrumb>
+    </div>
+
     <NSpin :show="loading">
       <!-- 页面头部 -->
       <div class="api-header">
@@ -90,6 +104,8 @@ import {
   NButton, 
   NIcon, 
   NEmpty,
+  NBreadcrumb,
+  NBreadcrumbItem,
   useMessage 
 } from 'naive-ui'
 import type { ApiDetail, ApiInfoResponse } from '@/types/api-detail'
@@ -199,6 +215,10 @@ onMounted(async () => {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.breadcrumb {
+  margin-bottom: 12px;
 }
 
 .api-header {

@@ -93,7 +93,7 @@ export class ApiDetailService {
       if (data.is_active) {
         await ApiDetail.update(
           { is_active: false },
-          { where: { api_id: detail.api_id } }
+          { where: { api_id: detail.get('api_id') as string } }
         )
       }
 
@@ -134,7 +134,7 @@ export class ApiDetailService {
       // 先取消该 API 下所有数据的活跃状态
       await ApiDetail.update(
         { is_active: false },
-        { where: { api_id: detail.api_id } }
+        { where: { api_id: detail.get('api_id') as string } }
       )
 
       // 设置当前数据为活跃
@@ -175,7 +175,7 @@ export class ApiDetailService {
         include: [
           {
             association: 'project',
-            attributes: ['name', 'host']
+            attributes: ['pid', 'name', 'host']
           }
         ]
       })
