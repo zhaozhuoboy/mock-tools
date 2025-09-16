@@ -12,6 +12,7 @@
   "author": "",
   "homepage": "",
   "dependencies": {
+    "@guolao/vue-monaco-editor": "^1.5.5",
     "@heroicons/vue": "^2.2.0",
     "@pinia/nuxt": "^0.5.1",
     "@types/jsonwebtoken": "^9.0.10",
@@ -19,6 +20,7 @@
     "chalk": "^5.4.1",
     "h3": "^1.15.4",
     "jsonwebtoken": "^9.0.2",
+    "monaco-editor": "^0.53.0",
     "mysql2": "^3.14.3",
     "naive-ui": "^2.38.2",
     "nuxt": "^3.19.2",

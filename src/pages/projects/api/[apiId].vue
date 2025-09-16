@@ -55,7 +55,12 @@
           </template>
           
           <div class="detail-content">
-            <NCode :code="currentDetail.payload" language="json" />
+            <MonacoEditor
+              :modelValue="currentDetail?.payload || ''"
+              :readOnly="true"
+              :height="'calc(100vh - 420px)'"
+              :autoFormatOnMount="true"
+            />
           </div>
         </NCard>
         
@@ -70,11 +75,10 @@
           <NInput v-model:value="createForm.name" placeholder="请输入数据名称" />
         </NFormItem>
         <NFormItem label="数据内容" path="payload">
-          <NInput
-            v-model:value="createForm.payload"
-            type="textarea"
-            placeholder="请输入 JSON 格式的数据"
-            :rows="8"
+          <MonacoEditor
+            v-model:modelValue="createForm.payload"
+            :height="300"
+            :autoFormatOnMount="true"
           />
         </NFormItem>
       </NForm>
@@ -95,6 +99,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { PlusOutlined } from '@vicons/antd'
+import MonacoEditor from '@/components/common/MonacoEditor.vue'
 import { 
   NSpin, 
   NCard, 
