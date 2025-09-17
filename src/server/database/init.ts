@@ -11,10 +11,8 @@ export const initDatabase = async () => {
       throw new Error('数据库初始化失败')
     }
 
-    // 开发环境下同步数据库结构
-    if (process.env.NODE_ENV === 'development') {
-      await syncAllModels(false)
-    }
+    // 同步数据库结构（开发和生产环境都需要）
+    await syncAllModels(false)
 
     console.log('✅ 数据库初始化完成')
     return true

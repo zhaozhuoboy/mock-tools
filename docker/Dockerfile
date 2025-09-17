@@ -42,6 +42,13 @@ ENV NODE_ENV=production
 ENV NUXT_HOST=0.0.0.0
 ENV NUXT_PORT=3000
 
+# 设置数据库默认环境变量
+ENV DB_HOST=localhost
+ENV DB_PORT=3306
+ENV DB_USERNAME=root
+ENV DB_PASSWORD=123456
+ENV DB_DATABASE=mock_tools
+
 # 安装依赖
 RUN pnpm install
 
