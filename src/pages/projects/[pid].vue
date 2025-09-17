@@ -129,6 +129,12 @@ const mockUrl = computed(() => {
   return `${location.origin}/proxy/${userStore.user.uid}/${project.value.pid}`
 })
 
+watch(() => showCreateApi.value, (show) => {
+  if (!show) {
+    currentApi.value = null
+  }
+})
+
 // 复制到剪贴板
 const copyMockUrl = async () => {
   try {
