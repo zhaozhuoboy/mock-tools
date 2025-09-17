@@ -65,28 +65,70 @@ docker build -f docker/Dockerfile -t zhaozhuodev/mock_tools:latest .
 
 ## 环境变量配置
 
-### 应用环境变量
+### 单一镜像环境变量（支持 Docker 桌面端自定义）
 
-| 变量名      | 默认值                           | 说明         |
-| ----------- | -------------------------------- | ------------ |
-| NODE_ENV    | production                       | 运行环境     |
-| NUXT_HOST   | 0.0.0.0                          | 应用监听地址 |
-| NUXT_PORT   | 3000                             | 应用端口     |
-| DB_HOST     | mysql                            | 数据库主机   |
-| DB_PORT     | 3306                             | 数据库端口   |
-| DB_USERNAME | mock_tools_user                  | 数据库用户名 |
-| DB_PASSWORD | mock_tools_password              | 数据库密码   |
-| DB_DATABASE | mock_tools                       | 数据库名称   |
-| JWT_SECRET  | mock_tools_jwt_secret_production | JWT 密钥     |
+| 变量名              | 默认值                           | 说明                   |
+| ------------------- | -------------------------------- | ---------------------- |
+| **MySQL 配置**      |                                  |                        |
+| MYSQL_ROOT_PASSWORD | 123456                           | MySQL root 用户密码    |
+| MYSQL_DATABASE      | mock_tools                       | MySQL 数据库名称       |
+| MYSQL_USER          | mock_tools_user                  | MySQL 应用用户         |
+| MYSQL_PASSWORD      | mock_tools_password              | MySQL 应用用户密码     |
+| **应用数据库配置**  |                                  |                        |
+| DB_HOST             | localhost                        | 应用连接数据库的主机   |
+| DB_PORT             | 3306                             | 应用连接数据库的端口   |
+| DB_USERNAME         | root                             | 应用连接数据库的用户名 |
+| DB_PASSWORD         | 123456                           | 应用连接数据库的密码   |
+| DB_DATABASE         | mock_tools                       | 应用连接的数据库名称   |
+| **应用配置**        |                                  |                        |
+| NODE_ENV            | production                       | 运行环境               |
+| NUXT_HOST           | 0.0.0.0                          | 应用监听地址           |
+| NUXT_PORT           | 3000                             | 应用端口               |
+| JWT_SECRET          | mock_tools_jwt_secret_production | JWT 密钥               |
 
-### 数据库环境变量
+### Docker 桌面端配置示例
 
-| 变量名              | 默认值                   | 说明            |
-| ------------------- | ------------------------ | --------------- |
-| MYSQL_ROOT_PASSWORD | mock_tools_root_password | MySQL root 密码 |
-| MYSQL_DATABASE      | mock_tools               | 数据库名称      |
-| MYSQL_USER          | mock_tools_user          | 数据库用户      |
-| MYSQL_PASSWORD      | mock_tools_password      | 数据库用户密码  |
+在 Docker Desktop 中启动容器时，可以在 "Environment variables" 部分添加以下变量：
+
+```bash
+# 自定义 MySQL 配置
+MYSQL_ROOT_PASSWORD=your_secure_root_password
+MYSQL_DATABASE=your_database_name
+MYSQL_USER=your_mysql_user
+MYSQL_PASSWORD=your_mysql_password
+
+# 自定义应用数据库连接
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=your_db_username
+DB_PASSWORD=your_db_password
+DB_DATABASE=your_database_name
+
+# 自定义应用配置
+JWT_SECRET=your_very_secure_jwt_secret
+```
+
+### 命令行启动示例
+
+```bash
+# 使用默认配置
+docker run -d --name mock-tools -p 3000:3000 -p 3306:3306 zhaozhuodev/mock_tools:latest
+
+# 使用自定义配置
+docker run -d \
+  --name mock-tools \
+  -p 3000:3000 \
+  -p 3306:3306 \
+  -e MYSQL_ROOT_PASSWORD=my_secure_password \
+  -e MYSQL_DATABASE=my_mock_tools \
+  -e MYSQL_USER=my_user \
+  -e MYSQL_PASSWORD=my_password \
+  -e DB_USERNAME=my_user \
+  -e DB_PASSWORD=my_password \
+  -e DB_DATABASE=my_mock_tools \
+  -e JWT_SECRET=my_jwt_secret \
+  zhaozhuodev/mock_tools:latest
+```
 
 ## 生产环境部署
 
