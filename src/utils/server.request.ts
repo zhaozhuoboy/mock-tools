@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import { useFetch } from 'nuxt/app'
+import { useFetch, useRequestHeaders } from 'nuxt/app'
 
 type ServiceResponse = {
   code: string | number,
@@ -24,8 +24,37 @@ export const serverFetch = (option: {
     const headers = new Headers(option.headers || {
       'Content-type': 'application/json'
     })
-    // const token = useUserStore().getToken()
-    // headers.set('Authorization', `Bearer ${token}`)
+    
+    // 优先转发入站 Authorization；否则从 Cookie 读取 token 并写入 Authorization
+    try {
+      const reqHeaders = useRequestHeaders(['authorization', 'cookie']) || {}
+      const incomingAuth = (reqHeaders as any).authorization as string | undefined
+      if (incomingAuth && !headers.has('Authorization')) {
+        headers.set('Authorization', incomingAuth)
+      } else {
+        const cookieHeader = (reqHeaders as any).cookie as string | undefined
+        if (cookieHeader) {
+          const token = (() => {
+            const parts = cookieHeader.split(';')
+            for (const rawPart of parts) {
+              const part = rawPart.trim()
+              const eqIndex = part.indexOf('=')
+              if (eqIndex === -1) continue
+              const k = part.substring(0, eqIndex).trim()
+              const v = part.substring(eqIndex + 1)
+              if (k === 'token') return decodeURIComponent(v || '')
+            }
+            return ''
+          })()
+          if (token && !headers.has('Authorization')) {
+            headers.set('Authorization', `Bearer ${token}`)
+          }
+        }
+      }
+    } catch (e) {
+      // ignore cookie parsing errors on client or non-SSR contexts
+    }
+    
 
     let opt: any = {
       method: option.method ?? 'post',
@@ -34,24 +63,27 @@ export const serverFetch = (option: {
         console.log('onRsponse', ctx)
       }
     }
-
-    if (opt.method?.toLocaleLowerCase() === 'get') {
+    // 保证同源请求在客户端携带 Cookie
+    opt.credentials = 'include'
+    const method = opt.method?.toLocaleLowerCase()
+    if (method === 'get') {
       const params = option.data || {}
       opt.query = params
 
       url += `?t=${Date.now()}`
     }
 
-    if (opt.method?.toLocaleLowerCase() === 'post') {
+    if (['post', 'put', 'delete', 'patch'].includes(method)) {
       opt.body = option.data
     }
 
     url = /^\bhttp(s)?\b|\/\//.test(url) ? url : `${baseUrl}${url.replace(/^\/*/, '')}`
 
-    console.log(chalk.blue('server http url'), chalk.green(url))
+    console.log(chalk.blue('Server request url'), chalk.green(url))
 
     useFetch(url, opt).then(response => {
       const { data: res, error, clear, refresh, status } = response
+      console.log('status', error.value)
 
       if (status.value === 'success') {
         const { code, data, error = {}, msg } = res.value as ServiceResponse

@@ -34,19 +34,21 @@
         </div>
       </div>
       <div class="mock-url">
-        <NInputGroup>
-          <NInputGroupLabel>Mock URL:</NInputGroupLabel>
-          <NTooltip
-            content="点击复制"
-            placement="top"
-          >
-            <template #trigger>
-              <NInput :value="mockUrl" disabled readonly style="flex: 1;" />
-            </template>
-            <span>MockTools域名/proxy/用户ID/项目ID/接口路径</span>
-          </NTooltip>
-        </NInputGroup>
-        <NButton type="primary" ghost @click="copyMockUrl">复制</NButton>
+        <ClientOnly>
+          <NInputGroup>
+            <NInputGroupLabel>Mock URL:</NInputGroupLabel>
+            <NTooltip
+              content="点击复制"
+              placement="top"
+            >
+              <template #trigger>
+                <NInput :value="mockUrl" disabled readonly style="flex: 1;" />
+              </template>
+              <span>MockTools域名/proxy/用户ID/项目ID/接口路径</span>
+            </NTooltip>
+          </NInputGroup>
+          <NButton type="primary" ghost @click="copyMockUrl">复制</NButton>
+        </ClientOnly>
       </div>
 
       <div class="api-list">
@@ -83,11 +85,13 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { NButton, useMessage, useDialog, NSkeleton, NInput, NInputGroup, NInputGroupLabel, NTooltip, NEmpty } from 'naive-ui'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import ApiItem from '@/components/projects/ApiItem.vue'
 import CreateApiModal from '@/components/projects/CreateApiModal.vue'
 import Breadcrumb from '@/components/common/Breadcrumb.vue'
 import ajax from '@/utils/http'
+import { serverFetch } from '@/utils/server.request'
+
 import type { Project } from '@/types/project'
 import { useUserStore } from '@/store/user'
 
@@ -147,49 +151,70 @@ const formatDate = (dateString: string) => {
   })
 }
 
-// 加载项目详细信息
+// SSR 获取项目信息与接口列表
+try {
+  loading.value = true
+  error.value = null
+  const pid = route.params.pid as string
+
+  const { data: projectRes } = await useAsyncData(`project-${pid}`,
+    () => serverFetch({ url: `/api/project/${pid}`, method: 'get' })
+  )
+  const projectVal: any = projectRes.value
+  if (projectVal && projectVal.project) {
+    project.value = projectVal.project
+    useHead({
+      title: project.value ? `${project.value.name}` : '项目详情',
+      meta: [
+        { name: 'description', content: project.value?.description || `项目 ${project.value?.name || ''} 的接口管理页面` }
+      ]
+    })
+  } else {
+    error.value = '未获取到项目信息或无权限访问'
+  }
+
+  if (project.value) {
+    const { data: apisRes } = await useAsyncData(`apis-${pid}`,
+      () => serverFetch({ url: `/api/project/interface/${pid}`, method: 'get' })
+    )
+    const apisVal: any = apisRes.value
+    const list = Array.isArray(apisVal) ? apisVal : (Array.isArray(apisVal?.data) ? apisVal.data : [])
+    apis.value = list
+  }
+} catch (err: any) {
+  error.value = err?.message || '加载失败'
+} finally {
+  loading.value = false
+}
+
+// 客户端交互时复用的加载函数
 const loadProjectInfo = async () => {
   try {
     loading.value = true
     error.value = null
-    
     const pid = route.params.pid as string
-    console.log('loadProjectInfo', pid)
-    const res: any = await ajax({ 
-      url: `/api/project/${pid}`, 
-      method: 'get' 
-    }).catch(err => {
-      if (err.code === -1003) {
-        router.replace('/404')
-        return
-      }
-      return err
-    })
-    
-    project.value = res.project
-    // 更新页面标题
-    if (project.value) {
+    const res: any = await ajax({ url: `/api/project/${pid}`, method: 'get' }).catch(err => err)
+    if (res && res.project) {
+      project.value = res.project
       useHead({
-        title: `${project.value.name}`,
+        title: project.value ? `${project.value.name}` : '项目详情',
         meta: [
-          { name: 'description', content: project.value.description || `项目 ${project.value.name} 的接口管理页面` }
+          { name: 'description', content: project.value?.description || `项目 ${project.value?.name || ''} 的接口管理页面` }
         ]
       })
     }
   } catch (err: any) {
     error.value = err?.message || '加载项目信息失败'
-    console.error('加载项目信息失败:', err)
   } finally {
     loading.value = false
   }
 }
+
 const loadApis = async () => {
-  if (!project.value) return
-  
-  const res: any = await ajax({ url: `/api/project/interface/${project.value.pid}`, method: 'get' }).catch(err => err)
-  // 当项目不存在时，接口会返回业务错误 code（非 0）且 data: []
+  const pid = (project.value?.pid || route.params.pid) as string
+  if (!pid) return
+  const res: any = await ajax({ url: `/api/project/interface/${pid}`, method: 'get' }).catch(err => err)
   if (res && res.api === 1) {
-    // 业务错误
     if (res.code === -1203) {
       router.replace('/404')
       return
@@ -282,13 +307,7 @@ const handleUpdateApi = async (data: any) => {
     updatingApi.value = false
   }
 }
-
-onMounted(async () => { 
-  await loadProjectInfo()
-  if (project.value) {
-    await loadApis()
-  }
-})
+// 客户端无需重复加载，SSR 已获取
 </script>
 
 <style scoped lang="scss">

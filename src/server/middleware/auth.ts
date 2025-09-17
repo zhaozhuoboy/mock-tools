@@ -11,8 +11,29 @@ export default defineEventHandler(async event => {
 
   try {
     const authHeader = getHeader(event, 'authorization')
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      // 未携带token：仅对 API 返回 401；页面不做服务端跳转，避免 SSR 水合不一致
+    const cookieHeader = getHeader(event, 'cookie') || ''
+    
+    // 优先使用 Authorization，其次从 Cookie 中读取 token
+    let token: string | null = null
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.substring(7)
+    } else if (cookieHeader) {
+      const parts = cookieHeader.split(';')
+      for (const rawPart of parts) {
+        const part = rawPart.trim()
+        const eqIndex = part.indexOf('=')
+        if (eqIndex === -1) continue
+        const k = part.substring(0, eqIndex).trim()
+        const v = part.substring(eqIndex + 1)
+        if (k === 'token') {
+          token = decodeURIComponent(v || '')
+          break
+        }
+      }
+    }
+
+    if (!token) {
+      // 未携带 token：仅对 API 返回 401；页面不做服务端跳转，避免 SSR 水合不一致
       if (isApi && !isAuthApi) {
         setResponseStatus(event, 401)
         return { code: -2001, message: '未登录或登录已失效' }
@@ -20,7 +41,6 @@ export default defineEventHandler(async event => {
       return
     }
 
-    const token = authHeader.substring(7)
     const config = useRuntimeConfig()
     const JWT_SECRET = (config as any).jwtSecret
 
