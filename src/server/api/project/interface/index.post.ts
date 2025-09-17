@@ -1,5 +1,6 @@
 import { ApiService, ProjectService } from '~/server/database/services/ProjectService'
 import { GroupService } from '~/server/database/services/GroupService'
+import { ApiDetailService } from '~/server/database/services/ApiDetailService'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -51,6 +52,23 @@ export default defineEventHandler(async (event) => {
     // 记录关键载荷，便于定位数据问题
     console.log('Creating API with:', { projectId, ...payload })
     const created = await ApiService.create(projectId, payload as any)
+
+    // 若包含 apiData，则创建一条默认数据详情
+    const apiData = (body as any).apiData
+    if (apiData !== undefined && apiData !== null) {
+      const apiId = (created as any)?.get ? (created as any).get('id') : (created as any)?.id
+      const payloadString = typeof apiData === 'string' ? apiData : JSON.stringify(apiData)
+      try {
+        await ApiDetailService.create({
+          api_id: String(apiId),
+          name: '默认数据',
+          payload: payloadString,
+          is_active: true
+        } as any)
+      } catch (e) {
+        console.error('Create default ApiDetail failed:', e)
+      }
+    }
 
     return { code: 0, message: '创建成功', data: created }
   } catch (error: any) {

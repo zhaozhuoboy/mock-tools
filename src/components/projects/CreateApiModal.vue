@@ -58,6 +58,20 @@
       </NFormItem>
     </NForm>
 
+    <NForm
+      class="create-api-form"
+      label-placement="top"
+      label-width="auto"
+      require-mark-placement="right-hanging"
+    >
+      <NFormItem label="接口数据（可选）" path="apiData">
+        <MonacoEditor
+          v-model:modelValue="apiDataModel"
+          :height="400"
+        />
+      </NFormItem>
+    </NForm>
+
     <template #footer>
       <div class="modal-footer">
         <NButton 
@@ -94,6 +108,7 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from 'vue'
 import { NDrawer, NDrawerContent, NForm, NFormItem, NInput, NSelect, NButton, NIcon } from 'naive-ui'
+import MonacoEditor from '@/components/common/MonacoEditor.vue'
 import type { SelectOption } from 'naive-ui'
 // import { getProjectGroups } from '@/utils/server.request'
 import { useRoute } from 'vue-router'
@@ -115,6 +130,7 @@ interface FormData {
   method: HttpMethod | null
   group?: string | null
   description?: string
+  apiData?: string
 }
 
 interface Props {
@@ -145,6 +161,7 @@ const formData = ref<FormData>({
   group: null,
   description: ''
 })
+const apiDataModel = ref<string>('')
 
 const groupOptions = ref<SelectOption[]>([])
 const route = useRoute()
@@ -176,11 +193,14 @@ watch(() => props.show, (val) => {
         path: props.editData.path || '',
         method: props.editData.method || null,
         group: props.editData.group || null,
-        description: props.editData.description || ''
+        description: props.editData.description || '',
+        apiData: formData.value.apiData || ''
       }
+      apiDataModel.value = formData.value.apiData || ''
     } else {
       // 创建模式：清空数据
-      formData.value = { path: '', method: null, group: null, description: '' }
+      formData.value = { path: '', method: null, group: null, description: '', apiData: '' }
+      apiDataModel.value = ''
     }
     loadGroups()
   }
@@ -193,8 +213,10 @@ watch(() => props.editData, (newEditData) => {
       path: newEditData.path || '',
       method: newEditData.method || null,
       group: newEditData.group || null,
-      description: newEditData.description || ''
+      description: newEditData.description || '',
+      apiData: formData.value.apiData || ''
     }
+    apiDataModel.value = formData.value.apiData || ''
   }
 })
 
@@ -228,20 +250,32 @@ const handleUpdateShow = (value: boolean) => {
 const handleSubmit = async () => {
   console.log('handleSubmit', isEditMode.value)
   await formRef.value?.validate()
+  // 校验 apiData 是否为合法 JSON（若填写）
+  let apiDataPayload: any = undefined
+  if (apiDataModel.value && String(apiDataModel.value).trim()) {
+    try {
+      apiDataPayload = JSON.parse(String(apiDataModel.value))
+    } catch (e) {
+      // 保持为字符串由后端处理，或提示用户
+      apiDataPayload = String(apiDataModel.value)
+    }
+  }
   if (isEditMode.value) {
     emit('edit', { 
       id: props.editData?.id,
       path: formData.value.path.trim(),
       method: formData.value.method as HttpMethod | null,
       group: formData.value.group?.trim() || '',
-      description: formData.value.description?.trim() || ''
+      description: formData.value.description?.trim() || '',
+      apiData: apiDataPayload
     })
   } else {
     emit('submit', { 
       path: formData.value.path.trim(),
       method: formData.value.method as HttpMethod | null,
       group: formData.value.group?.trim() || '',
-      description: formData.value.description?.trim() || ''
+      description: formData.value.description?.trim() || '',
+      apiData: apiDataPayload
     })
   }
   
