@@ -93,6 +93,10 @@ definePageMeta({
   title: '用户登录'
 })
 
+useHead({
+  title: '登录'
+})
+
 // 用户store
 const userStore = useUserStore()
 const router = useRouter()
