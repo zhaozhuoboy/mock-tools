@@ -1,18 +1,6 @@
 <template>
-  <div class="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-      <div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          登录到您的账户
-        </h2>
-        <p class="mt-2 text-center text-sm text-gray-600">
-          或者
-          <NuxtLink to="/auth/register" class="font-medium text-indigo-600 hover:text-indigo-500">
-            创建新账户
-          </NuxtLink>
-        </p>
-      </div>
-      
+  <div class="flex items-center justify-center bg-gray-50 rounded-md py-6 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">      
       <NForm
         ref="formRef"
         :model="formData"
@@ -43,12 +31,14 @@
 
         <NFormItem>
           <div class="flex items-center justify-between w-full">
-            <NCheckbox v-model:checked="rememberMe">
-              记住我
-            </NCheckbox>
-            <!-- <NuxtLink to="/auth/forgot-password" class="text-sm text-indigo-600 hover:text-indigo-500">
-              忘记密码？
-            </NuxtLink> -->
+            <NuxtLink to="/auth/register" class="font-medium text-indigo-600 hover:text-indigo-500">
+              去注册
+            </NuxtLink>
+            <ClientOnly>
+              <NCheckbox v-model:checked="rememberMe">
+                记住我
+              </NCheckbox>
+            </ClientOnly>
           </div>
         </NFormItem>
 
@@ -90,7 +80,8 @@ import type { LoginData } from '@/store/user'
 // 页面元信息
 definePageMeta({
   layout: 'auth',
-  title: '用户登录'
+  title: '用户登录',
+  pageAlias: 'login'
 })
 
 useHead({

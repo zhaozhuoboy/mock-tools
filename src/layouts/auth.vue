@@ -3,18 +3,15 @@
     <div class="auth-container">
       <div class="auth-header">
         <NuxtLink to="/" class="logo-link">
-          <img src="/logo.png" alt="Logo" class="logo" />
-          <span class="logo-text">Mock Tool</span>
+          <span class="logo-text"> {{ title }} Mock Tool</span>
         </NuxtLink>
       </div>
-      
       <div class="auth-content">
         <slot />
       </div>
-      
       <div class="auth-footer">
         <p class="footer-text">
-          © 2024 Mock Tool. All rights reserved.
+          © {{ year }} Mock Tool. All rights reserved.
         </p>
       </div>
     </div>
@@ -23,6 +20,16 @@
 
 <script setup lang="ts">
 // 认证页面布局，用于登录和注册页面
+const route = useRoute()
+
+const year = ref(0)
+const title = computed(() => {
+  return route.meta.pageAlias === 'login' ? '登录' : '注册'
+})
+
+onMounted(() => {
+  year.value = new Date().getFullYear()
+})
 </script>
 
 <style scoped>
@@ -43,7 +50,6 @@
 
 .auth-header {
   padding: 1rem 2rem 0.5rem;
-  text-align: center;
 }
 
 .logo-link {

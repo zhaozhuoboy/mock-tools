@@ -17,6 +17,7 @@
     
     <!-- 正常内容 -->
     <div v-else-if="project">
+      <Breadcrumb :config="breadcrumbConfig" />
       <div class="header">
         <div class="info">
           <h1 class="name">{{ project.name }}</h1>
@@ -85,6 +86,7 @@ import { NButton, useMessage, useDialog, NSkeleton, NInput, NInputGroup, NInputG
 import { useRouter } from 'vue-router'
 import ApiItem from '@/components/projects/ApiItem.vue'
 import CreateApiModal from '@/components/projects/CreateApiModal.vue'
+import Breadcrumb from '@/components/common/Breadcrumb.vue'
 import ajax from '@/utils/http'
 import type { Project } from '@/types/project'
 import { useUserStore } from '@/store/user'
@@ -112,6 +114,10 @@ const updatingApi = ref(false)
 const currentApi = ref<ApiDef | null>(null)
 
 const router = useRouter()
+const breadcrumbConfig = computed(() => [
+  { alias: 'projects', path: '/projects', label: '🏠 项目列表' },
+  { alias: 'project-detail', label: project.value?.name || '项目详情' }
+])
 // 计算 Mock URL
 const mockUrl = computed(() => {
   if (!project.value || !userStore.user) return ''

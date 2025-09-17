@@ -8,12 +8,13 @@
             项目管理
           </h1>
           <p class="page-description">高效管理你的 Mock 服务项目，让开发更简单</p>
-          <div class="stats-row">
-            <div class="stat-item">
-              <span class="stat-number">{{ totalProjects }}</span>
-              <span class="stat-label">个项目</span>
-            </div>
-          </div>
+          
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-item">
+          <span class="stat-number">{{ totalProjects }}</span>
+          <span class="stat-label">个项目</span>
         </div>
       </div>
       <div class="action-section">
@@ -24,15 +25,13 @@
           class="create-btn"
           round
         >
-          <template #icon>
-            <NIcon size="18">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-            </NIcon>
-          </template>
-          创建新项目
+        <n-icon size="40">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path
+              d="M368.5 240H272v-96.5c0-8.8-7.2-16-16-16s-16 7.2-16 16V240h-96.5c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7H240v96.5c0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7 8.8 0 16-7.2 16-16V272h96.5c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+            />
+          </svg>
+        </n-icon>
         </NButton>
       </div>
     </div>
@@ -64,7 +63,7 @@ const handleCreateClick = () => {
 .page-header {
   position: relative;
   z-index: 1;
-  padding: 32px 24px;
+  padding: 32px 24px 0;
   
   .header-content {
     max-width: 1200px;
@@ -72,7 +71,7 @@ const handleCreateClick = () => {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 40px;
+    gap: 24px;
     
     .title-section {
       flex: 1;
@@ -100,35 +99,48 @@ const handleCreateClick = () => {
           line-height: 1.5;
         }
         
-        .stats-row {
-          display: flex;
-          gap: 24px;
-          
-          .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 12px 20px;
-            background: var(--card-hover);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            
-            .stat-number {
-              font-size: 20px;
-              font-weight: 600;
-              color: var(--text-1);
-              margin-bottom: 4px;
-            }
-            
-            .stat-label {
-              font-size: 13px;
-              color: var(--text-2);
-            }
-          }
-        }
       }
     }
   }
+}
+
+.stats-row {
+  display: flex;
+  gap: 24px;
+}
+
+.stat-item {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  padding: 12px 0;
+  background: var(--card-hover);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  
+  .stat-number {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-1);
+    margin-bottom: 4px;
+  }
+  
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-2);
+  }
+}
+
+.action-section .create-btn {
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  font-size: 14px;
+  padding: 12px 0;
+  border-radius: 10px;
 }
 
 @keyframes bounce {
@@ -183,7 +195,10 @@ const handleCreateClick = () => {
       
       .action-section .create-btn {
         font-size: 14px;
-        padding: 12px 24px;
+        padding: 12px 0;
+        line-height: 80px;
+        width: 80px;
+        height: 80px;
       }
     }
   }

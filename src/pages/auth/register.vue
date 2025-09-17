@@ -1,18 +1,6 @@
 <template>
-  <div class="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-      <div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          创建新账户
-        </h2>
-        <p class="mt-2 text-center text-sm text-gray-600">
-          或者
-          <NuxtLink to="/auth/login" class="font-medium text-indigo-600 hover:text-indigo-500">
-            登录现有账户
-          </NuxtLink>
-        </p>
-      </div>
-      
+  <div class="flex items-center justify-center bg-gray-50 py-6 px-4 rounded-md sm:px-6 lg:px-8">
+    <div class="max-w-md w-full">
       <NForm
         ref="formRef"
         :model="formData"
@@ -87,10 +75,18 @@
         </NFormItem>
       </NForm>
 
+      <p class="text-center text-sm text-gray-600">
+        已有账号？
+        <NuxtLink to="/auth/login" class="font-medium text-indigo-600 hover:text-indigo-500">
+          去登录
+        </NuxtLink>
+      </p>
+
       <!-- 错误提示 -->
       <NAlert
         v-if="errorMessage"
         type="error"
+        class="mt-4"
         :show-icon="true"
         closable
         @close="errorMessage = ''"
@@ -102,6 +98,7 @@
       <NAlert
         v-if="successMessage"
         type="success"
+        class="mt-4"
         :show-icon="true"
         closable
         @close="successMessage = ''"
