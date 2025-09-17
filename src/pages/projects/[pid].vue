@@ -30,7 +30,7 @@
           </div>
         </div>
         <div class="actions">
-          <NButton type="primary" round @click="onCreateApi">新建接口</NButton>
+          <NButton type="primary" size="large" @click="onCreateApi">新建接口</NButton>
         </div>
       </div>
       <div class="mock-url">

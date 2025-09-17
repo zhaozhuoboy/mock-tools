@@ -6,7 +6,7 @@
     title="新建数据" 
     @update:show="emit('update:show', $event)"
   >
-    <NDrawerContent>
+    <NDrawerContent title="新建数据">
       <NSpace justify="end">
         <NButton type="primary" @click="handleFillPreset">
           填充预置数据
@@ -30,8 +30,8 @@
       
       <template #footer>
         <NSpace justify="end">
-          <NButton @click="handleCancel">取消</NButton>
-          <NButton type="primary" :loading="loading" @click="handleSubmit">
+          <NButton @click="handleCancel" size="large">取消</NButton>
+          <NButton type="primary" size="large" :loading="loading" @click="handleSubmit">
             创建
           </NButton>
         </NSpace>

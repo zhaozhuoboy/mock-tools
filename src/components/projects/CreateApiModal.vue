@@ -1,14 +1,11 @@
 <template>
-  <NModal 
+  <NDrawer
     :show="show"
-    preset="card"
-    :title="isEditMode ? '编辑接口' : '新建接口'"
-    size="huge"
-    :bordered="false"
-    style="width: 600px"
-    class="create-api-modal"
+    placement="right"
+    :width="600"
     @update:show="handleUpdateShow"
   >
+    <NDrawerContent :title="isEditMode ? '编辑接口' : '新建接口'" class="create-api-modal">
     <NForm
       ref="formRef"
       :model="formData"
@@ -66,7 +63,6 @@
         <NButton 
           size="large"
           @click="handleCancel"
-          round
         >
           取消
         </NButton>
@@ -75,7 +71,6 @@
           size="large"
           @click="handleSubmit"
           :loading="loading"
-          round
         >
           <template #icon>
             <NIcon>
@@ -92,12 +87,13 @@
         </NButton>
       </div>
     </template>
-  </NModal>
+    </NDrawerContent>
+  </NDrawer>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from 'vue'
-import { NModal, NForm, NFormItem, NInput, NSelect, NButton, NIcon } from 'naive-ui'
+import { NDrawer, NDrawerContent, NForm, NFormItem, NInput, NSelect, NButton, NIcon } from 'naive-ui'
 import type { SelectOption } from 'naive-ui'
 // import { getProjectGroups } from '@/utils/server.request'
 import { useRoute } from 'vue-router'
