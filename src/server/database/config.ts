@@ -6,7 +6,7 @@ const dbConfig = {
   port: parseInt(process.env.DB_PORT || '3307'),
   username: process.env.DB_USERNAME || 'root',
   password: process.env.DB_PASSWORD || '123456',
-  database: process.env.DB_NAME || 'nuxt_start_app',
+  database: process.env.DB_DATABASE || 'mock_tools',
   dialect: 'mysql' as const,
   logging: undefined,
   // logging: console.log,

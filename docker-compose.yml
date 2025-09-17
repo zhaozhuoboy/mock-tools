@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # MySQL 数据库
+  mysql:
+    image: mysql:8.0
+    container_name: mock-tools-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: mock_tools_root_password
+      MYSQL_DATABASE: mock_tools
+      MYSQL_USER: mock_tools_user
+      MYSQL_PASSWORD: mock_tools_password
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - mock-tools-network
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+
+  # Mock Tools 应用
+  app:
+    image: zhaozhuodev/mock_tools:latest
+    container_name: mock-tools-app
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USERNAME: mock_tools_user
+      DB_PASSWORD: mock_tools_password
+      DB_DATABASE: mock_tools
+      JWT_SECRET: mock_tools_jwt_secret_production
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - mock-tools-network
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:3000']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  mysql_data:
+
+networks:
+  mock-tools-network:
+    driver: bridge
