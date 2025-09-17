@@ -24,6 +24,8 @@ export const serverFetch = (option: {
     const headers = new Headers(option.headers || {
       'Content-type': 'application/json'
     })
+    // const token = useUserStore().getToken()
+    // headers.set('Authorization', `Bearer ${token}`)
 
     let opt: any = {
       method: option.method ?? 'post',
@@ -92,9 +94,9 @@ export const serverFetch = (option: {
   })
 }
 
-export function getProjectGroups (pid: number | string) {
-  return serverFetch({
-    url: `/api/project/${pid}/group`,
-    method: 'get'
-  })
-}
+// export function getProjectGroups (pid: number | string) {
+//   return serverFetch({
+//     url: `/api/project/${pid}/group`,
+//     method: 'get'
+//   })
+// }

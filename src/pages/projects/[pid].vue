@@ -61,7 +61,9 @@
           @edit="onEditApi"
           @delete="onDeleteApi"
         />
-        <div v-if="apis.length === 0" class="empty">暂无接口</div>
+        <div v-if="apis.length === 0" class="empty">
+          <NEmpty size="large" description="没有接口～"></NEmpty>
+        </div>
       </div>
     </div>
     
@@ -79,7 +81,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { NButton, useMessage, useDialog, NSkeleton, NInput, NInputGroup, NInputGroupLabel, NTooltip } from 'naive-ui'
+import { NButton, useMessage, useDialog, NSkeleton, NInput, NInputGroup, NInputGroupLabel, NTooltip, NEmpty } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import ApiItem from '@/components/projects/ApiItem.vue'
 import CreateApiModal from '@/components/projects/CreateApiModal.vue'
@@ -90,7 +92,7 @@ import { useUserStore } from '@/store/user'
 definePageMeta({
   layout: 'default',
   layoutProps: {
-    hideFooter: true
+    // hideFooter: true
   }
 })
 

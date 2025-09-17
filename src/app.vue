@@ -4,11 +4,9 @@
       <NNotificationProvider>
         <NLoadingBarProvider>
           <NDialogProvider>
-            <div>
-              <NuxtLayout>
-                <NuxtPage />
-              </NuxtLayout>
-            </div>
+            <NuxtLayout>
+              <NuxtPage />
+            </NuxtLayout>
           </NDialogProvider>
         </NLoadingBarProvider>
       </NNotificationProvider>

@@ -99,8 +99,9 @@
 import { ref, watch, onMounted, computed } from 'vue'
 import { NModal, NForm, NFormItem, NInput, NSelect, NButton, NIcon } from 'naive-ui'
 import type { SelectOption } from 'naive-ui'
-import { getProjectGroups } from '@/utils/server.request'
+// import { getProjectGroups } from '@/utils/server.request'
 import { useRoute } from 'vue-router'
+import ajax from '@/utils/http'
 
 type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete'
 
@@ -203,7 +204,10 @@ watch(() => props.editData, (newEditData) => {
 
 const loadGroups = async () => {
   try {
-    const list = await getProjectGroups(pid.value) as any[]
+    const list = await ajax({
+      url: `/api/project/${pid.value}/group`,
+      method: 'get'
+    }) as any[]
     groupOptions.value = Array.isArray(list)
       ? list.map((g: any) => ({ label: g.name, value: g.name }))
       : []

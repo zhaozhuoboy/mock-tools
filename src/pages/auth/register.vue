@@ -180,12 +180,7 @@ const rules: FormRules = {
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, max: 100, message: '密码长度应在6-100个字符之间', trigger: 'blur' },
-    { 
-      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{6,}$/,
-      message: '密码必须包含大小写字母和数字',
-      trigger: 'blur'
-    }
+    { min: 6, max: 18, message: '密码长度应在6-18个字符之间', trigger: 'blur' }
   ],
   confirmPassword: [
     { required: true, message: '请确认密码', trigger: 'blur' },

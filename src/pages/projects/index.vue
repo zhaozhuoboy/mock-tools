@@ -149,7 +149,7 @@ onMounted(() => {
 .projects-page {
   background: var(--bg);
   position: relative;
-  min-height: 100vh;
+  // min-height: 100vh;
 }
 
 .projects-content {

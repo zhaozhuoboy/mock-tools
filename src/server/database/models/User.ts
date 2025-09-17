@@ -8,12 +8,12 @@ export interface UserAttributes {
   username: string
   email: string
   password: string
-  avatar?: string
-  nickname?: string
-  phone?: string
+  avatar?: string | null
+  nickname?: string | null
+  phone?: string | null
   status: 'active' | 'inactive' | 'banned'
   role: 'admin' | 'user' | 'guest'
-  last_login_at?: Date
+  last_login_at?: Date | null
   created_at: Date
   updated_at: Date
 }
@@ -22,7 +22,7 @@ export interface UserAttributes {
 export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'created_at' | 'updated_at'> {}
 
 // 用户模型类
-export class User extends Model{}
+export class User extends Model {}
 
 // 初始化用户模型
 User.init(

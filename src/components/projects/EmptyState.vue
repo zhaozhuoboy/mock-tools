@@ -46,12 +46,12 @@ const handleCreateClick = () => {
   padding: 80px 0;
   
   .empty-card {
-    background: rgba(255, 255, 255, 0.95);
+    // background: rgba(255, 255, 255, 0.95);
     border-radius: 24px;
     padding: 80px 60px;
     text-align: center;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
+    // box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    // backdrop-filter: blur(10px);
     max-width: 500px;
     
     .empty-icon {
@@ -72,14 +72,6 @@ const handleCreateClick = () => {
       color: #666;
       margin: 0 0 32px 0;
       line-height: 1.6;
-    }
-    
-    .empty-action-btn {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      border: none;
-      box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
-      font-weight: 600;
-      padding: 16px 32px;
     }
   }
 }

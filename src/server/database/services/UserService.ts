@@ -31,7 +31,7 @@ export class UserService {
   /**
    * 根据UID查找用户
    */
-  static async findByUid(uid: string): Promise<User | null> {
+  static async findByUid(uid: number): Promise<User | null> {
     try {
       return await User.findOne({
         where: { uid }

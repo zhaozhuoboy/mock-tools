@@ -2,12 +2,14 @@
   <NLayout
     class="layout"
     :native-scrollbar="false"
-    :content-class="'layout-content'"
+    :content-class="'app-layout-content'"
   >
     <NLayoutHeader class="layout-header">
       <Header />
     </NLayoutHeader>
-    <NLayoutContent class="layout-content">
+    <NLayoutContent
+      class="main-content"
+    >
       <slot />
     </NLayoutContent>
     <NLayoutFooter v-if="!hideFooter" class="layout-footer">
@@ -30,6 +32,15 @@ const hideFooter = computed(() => {
 })
 </script>
 
+<style lang="scss">
+.app-layout-content {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+</style>
+
 <style lang="scss" scoped>
 .layout {
   display: flex;
@@ -38,7 +49,7 @@ const hideFooter = computed(() => {
   background: var(--bg);
 }
 
-.layout-content {
+.main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
