@@ -34,13 +34,13 @@
           />
         </NFormItem>
 
-        <NFormItem label="手机号" path="phone">
+        <!-- <NFormItem label="手机号" path="phone">
           <NInput
             v-model:value="formData.phone"
             placeholder="请输入手机号（可选）"
             :input-props="{ autocomplete: 'tel' }"
           />
-        </NFormItem>
+        </NFormItem> -->
         
         <NFormItem label="密码" path="password">
           <NInput
