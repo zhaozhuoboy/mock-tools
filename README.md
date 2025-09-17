@@ -1,71 +1,46 @@
-# Nuxt 3 Naive UI Tailwind CSS Starter
+# Mock Tools
 
-## Setup
+## Nuxt 3 Naive UI Tailwind CSS
 
+### 页面
+
+![首页](./image/mock-已登录首页.png '已登录首页')
+
+![项目列表](./image/mock-项目列表.png)
+![项目列表](./image/mock-项目详情api列表.png)
+![默认数据](./image/mock-默认数据.png)
+![新建数据](./image/mock-新建数据.png)
+![切换数据](./image/mock-切换数据.png)
+![代理请求](./image/mock-代理成功数据.png)
+![代理请求](./image/mock-切换空数据.png)
+
+## 安装依赖
 
 ```bash
-# npm
-npm install
-
 # pnpm
 pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
+## 开发
 
 Start the development server on `http://localhost:6780`:
 
 ```bash
-# npm
-npm run dev
-
 # pnpm
 pnpm run dev
 
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
 ## Production
 
 Build the application for production:
-复制 .env.example => .env.prod  然后添加环境变量
+复制 .env.example => .env.prod 然后添加环境变量
 
 ```bash
-# npm
-npm run build
-
 # pnpm
 pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
-Locally preview production build:
+## Docker 部署
 
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
+[Link](./DEPLOYMENT.md)
