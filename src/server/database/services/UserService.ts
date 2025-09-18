@@ -21,7 +21,9 @@ export class UserService {
    */
   static async findById(id: number): Promise<User | null> {
     try {
-      return await User.findByPk(id)
+      return await User.findByPk(id, {
+        attributes: ['uid', 'email', 'avatar', 'nickname', 'username']
+      })
     } catch (error) {
       console.error('查找用户失败:', error)
       throw error
@@ -34,7 +36,8 @@ export class UserService {
   static async findByUid(uid: number): Promise<User | null> {
     try {
       return await User.findOne({
-        where: { uid }
+        where: { uid },
+        attributes: ['uid', 'email', 'avatar', 'nickname', 'username']
       })
     } catch (error) {
       console.error('查找用户失败:', error)
@@ -48,7 +51,8 @@ export class UserService {
   static async findByUsername(username: string): Promise<User | null> {
     try {
       return await User.findOne({
-        where: { username }
+        where: { username },
+        attributes: ['uid', 'email', 'avatar', 'nickname', 'username']
       })
     } catch (error) {
       console.error('查找用户失败:', error)
@@ -62,7 +66,8 @@ export class UserService {
   static async findByEmail(email: string): Promise<User | null> {
     try {
       return await User.findOne({
-        where: { email }
+        where: { email },
+        attributes: ['uid', 'email', 'avatar', 'nickname', 'username']
       })
     } catch (error) {
       console.error('查找用户失败:', error)

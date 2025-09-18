@@ -264,7 +264,7 @@ const onDeleteApi = async (api: ApiDef) => {
   // 显示确认对话框
   dialog.error({
     title: '确认删除',
-    content: `确定要删除接口 "${api.path}" 吗？此操作不可撤销。`,
+    content: `确定要删除接口 "${api.path}" 吗？此操作不可撤销。删除后此接口下的所有数据都将被删除`,
     positiveText: '删除',
     negativeText: '取消',
     onPositiveClick: async () => {

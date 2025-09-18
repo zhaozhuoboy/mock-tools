@@ -1,6 +1,7 @@
 import { defineEventHandler, getMethod, getRouterParam } from 'h3'
 import { ApiDetailService } from '../../../../database/services/ApiDetailService'
-import { ProjectService, ApiService } from '../../../../database/services/ProjectService'
+import { ProjectService } from '../../../../database/services/ProjectService'
+import { ApiService } from '~/server/database/services/ApiService'
 
 /**
  * 代理接口 - 根据用户ID、项目ID和路径返回mock数据

@@ -1,4 +1,5 @@
-import { ApiService, ProjectService } from "~/server/database/services/ProjectService";
+import { ProjectService } from "~/server/database/services/ProjectService";
+import { ApiService } from '~/server/database/services/ApiService'
 import { Api } from '~/server/database/models/Api'
 
 export default defineEventHandler(async (event) => {
@@ -44,6 +45,7 @@ export default defineEventHandler(async (event) => {
     if (!deletedApi) {
       return { code: -1247, message: '删除失败' }
     }
+    // 将此api关联的所有数据都删除
 
     return { 
       code: 0, 

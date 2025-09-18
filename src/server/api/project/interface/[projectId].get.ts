@@ -1,4 +1,5 @@
-import { ApiService, ProjectService } from '~/server/database/services/ProjectService'
+import { ProjectService } from '~/server/database/services/ProjectService'
+import { ApiService } from '~/server/database/services/ApiService'
 
 export default defineEventHandler(async (event) => {
   try {
