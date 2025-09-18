@@ -241,6 +241,8 @@ const loadProjectInfo = async () => {
           { name: 'description', content: project.value?.description || `项目 ${project.value?.name || ''} 的接口管理页面` }
         ]
       })
+
+      loadApis()
     }
   } catch (err: any) {
     error.value = err?.message || '加载项目信息失败'
@@ -264,7 +266,7 @@ const loadApis = async () => {
     }
   }
 
-  console.log(res)
+  error.value = null
   const list = res.list || []
   apis.value = list
   paging.total = res.page.total

@@ -1,4 +1,4 @@
-import { readBody, defineEventHandler, setCookie } from 'h3'
+import { readBody, defineEventHandler, setCookie, getRequestHeader } from 'h3'
 import { UserService } from '../../database/services/UserService'
 import type { UserAttributes } from '../../database/models/User'
 import { verifyPassword } from '../../utils/crypto'
@@ -75,10 +75,12 @@ export default defineEventHandler(async (event) => {
       )
 
       // 设置 HttpOnly Cookie，7天有效
+      const forwardedProto = getRequestHeader(event, 'x-forwarded-proto') || 'http'
+      const isSecure = forwardedProto === 'https'
       setCookie(event, 'token', token, {
         httpOnly: true,
         sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
+        secure: isSecure,
         path: '/',
         maxAge: 60 * 60 * 24 * 7
       })
