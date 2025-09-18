@@ -26,7 +26,7 @@ export default defineNuxtConfig({
     // 客户端环境变量（以public开头）
     public: {
       // 这里可以添加需要在客户端访问的环境变量
-    }
+    },
   },
 
   srcDir: 'src/',

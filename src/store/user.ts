@@ -146,7 +146,7 @@ export const useUserStore = defineStore('user', () => {
 
       // 使用 ajax 封装方法请求
       const data = await ajax({
-        url: '/api/user/me',
+        url: '/api/user/auth',
         method: 'get'
       })
 

@@ -1,9 +1,11 @@
 <template>
   <div class="api-item">
     <div class="left">
-      <NTag :type="methodType" size="small" round class="method">{{ method.toUpperCase() }}</NTag>
-      <span class="path">{{ path }}</span>
-      <NTag v-if="group" size="small" class="group">{{ group }}</NTag>
+      <div class="api-wrap">
+        <NTag :type="methodType" size="small" round class="method">{{ method.toUpperCase() }}</NTag>
+        <span class="path">{{ path }}</span>
+      </div>
+      <NTag v-if="group" size="small" type="warning" round class="group">{{ group }}</NTag>
       <span v-if="description" class="desc">{{ description }}</span>
     </div>
     <div class="right">
@@ -84,33 +86,39 @@ const handleDetail = () => {
   justify-content: space-between;
   padding: 8px 0;
 
-  .left {
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  gap: 12px;
+
+  .api-wrap {
     display: flex;
     align-items: center;
+    flex-basis: 50%;
     gap: 12px;
-
-    .method {
-      font-weight: 600;
-    }
-    .path {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      color: var(--text-1);
-    }
-    .group {
-      background: var(--primary-tint-1);
-      border: 1px solid var(--primary-tint-2);
-    }
-    .desc {
-      color: var(--text-2);
-      font-size: 12px;
-      margin-left: 8px;
-    }
   }
 
-  .right {
-    display: flex;
-    gap: 8px;
+  .method {
+    font-weight: 600;
   }
+  .path {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    color: var(--text-1);
+  }
+  .desc {
+    color: var(--text-2);
+    font-size: 12px;
+    margin-left: 8px;
+  }
+}
+
+.right {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
 }
 
 .divider {

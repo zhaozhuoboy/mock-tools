@@ -18,11 +18,7 @@
             aria-label="切换主题"
             @click="toggleTheme"
           >
-            <template #icon>
-              <n-icon size="16">
-                <span class="theme-icon">{{ isDark ? '🌙' : '☀️' }}</span>
-              </n-icon>
-            </template>
+            {{ isDark ? '🌙' : '☀️' }}
           </n-button>
         </ClientOnly>
         <!-- 使用 ClientOnly 避免 SSR 水合不匹配 -->
@@ -206,7 +202,7 @@ const handleUserMenuSelect = async (key: string) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 40px;
+  margin: 0 20px;
   gap: 24px;
 }
 
@@ -227,7 +223,7 @@ const handleUserMenuSelect = async (key: string) => {
   }
 
   &.router-link-active {
-    background-color: var(--primary-tint-2);
+    // background-color: var(--primary-tint-2);
     color: var(--primary);
     font-weight: 600;
     

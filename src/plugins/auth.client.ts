@@ -14,7 +14,7 @@ export default defineNuxtPlugin(async () => {
   }
 
   // 需要认证的路由
-  const protectedRoutes = ['/projects', '/dashboard', '/profile']
+  const protectedRoutes = ['/projects']
   
   // 登录相关路由
   const authRoutes = ['/auth/login', '/auth/register']
@@ -29,7 +29,6 @@ export default defineNuxtPlugin(async () => {
   router.beforeEach(async (to, from, next) => {
     // 检查是否需要认证
     const needsAuth = protectedRoutes.some(route => to.path.startsWith(route))
-    const isAuthRoute = authRoutes.some(route => to.path.startsWith(route))
 
     // 如果不需要认证，直接放行
     if (!needsAuth) {
@@ -38,7 +37,6 @@ export default defineNuxtPlugin(async () => {
 
     // 检查是否有 token
     if (!userStore.token) {
-      console.log('认证插件：未找到 token，跳转到登录页')
       return next(`/auth/login?redirect=${encodeURIComponent(to.fullPath)}`)
     }
 
@@ -75,11 +73,9 @@ export default defineNuxtPlugin(async () => {
       // 检查是否有 token 但用户信息未加载
       if (userStore.token && !userStore.user) {
         try {
-          console.log('认证插件：登录页面验证 token')
           const result = await userStore.fetchUserInfo()
           if (result.success) {
             const redirectTo = to.query.redirect as string || '/projects'
-            console.log('认证插件：登录页面验证成功，重定向到:', redirectTo)
             return next(redirectTo)
           }
         } catch (error) {
@@ -90,7 +86,6 @@ export default defineNuxtPlugin(async () => {
       // 如果已经完整登录，直接重定向
       if (userStore.isLoggedIn) {
         const redirectTo = to.query.redirect as string || '/projects'
-        console.log('认证插件：已登录用户访问登录页，重定向到:', redirectTo)
         return next(redirectTo)
       }
     }

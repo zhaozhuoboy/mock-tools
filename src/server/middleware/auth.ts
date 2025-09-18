@@ -6,8 +6,7 @@ export default defineEventHandler(async event => {
   const url = getRequestURL(event)
   const path = url.pathname || ''
   const isApi = path.startsWith('/api')
-  const isAuthPage = path.startsWith('/auth')
-  const isAuthApi = path.startsWith('/api/user/login') || path.startsWith('/api/user/register') || path.startsWith('/api/user/me')
+  const isAuthApi = path.startsWith('/api/user/login') || path.startsWith('/api/user/register') || path.startsWith('/api/user/auth')
 
   try {
     const authHeader = getHeader(event, 'authorization')

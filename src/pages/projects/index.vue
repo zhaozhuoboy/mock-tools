@@ -147,7 +147,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .projects-page {
-  background: var(--bg);
+  // background: var(--bg);
   position: relative;
   // min-height: 100vh;
 }
@@ -163,6 +163,7 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 16px;
+  padding: 30px 0;
   animation: fadeInUp 0.6s ease-out;
 }
 
