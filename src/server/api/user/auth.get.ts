@@ -1,4 +1,4 @@
-import { defineEventHandler } from 'h3'
+import { defineEventHandler, setCookie, getHeader, getRequestHeader } from 'h3'
 import { UserService } from '../../database/services/UserService'
 import jwt from 'jsonwebtoken'
 
@@ -41,9 +41,20 @@ export default defineEventHandler(async (event) => {
       }
     }
 
+    // 鉴权成功后种下 HttpOnly Cookie（与登录保持一致，7天）
+    const forwardedProto = getRequestHeader(event, 'x-forwarded-proto') || 'http'
+    const isSecure = forwardedProto === 'https'
+    setCookie(event, 'token', token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: isSecure,
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7
+    })
+
     // 返回用户信息（不包含密码）
     const { password: _, ...userWithoutPassword } = user.toJSON()
-
+    
     return {
       code: 0,
       data: userWithoutPassword,
