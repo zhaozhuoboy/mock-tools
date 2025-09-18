@@ -44,3 +44,12 @@ pnpm run build
 ## Docker 部署
 
 [Link](./DEPLOYMENT.md)
+
+## 功能列表
+
+- [x] 登录/注册
+- [ ] 个人信息更新
+- [x] 项目创建/修改/删除
+- [x] api 创建/修改/删除/分页
+- [x] api 多数据切换
+- [ ] api 数据修改
