@@ -14,7 +14,7 @@
       <div class="stats-row">
         <div class="stat-item">
           <span class="stat-number">{{ totalProjects }}</span>
-          <span class="stat-label">个项目</span>
+          <span class="stat-label">项目</span>
         </div>
       </div>
       <div class="action-section">
@@ -122,7 +122,8 @@ const handleCreateClick = () => {
   border: 1px solid var(--border);
   
   .stat-number {
-    font-size: 20px;
+    line-height: 1;
+    font-size: 30px;
     font-weight: 600;
     color: var(--text-1);
     margin-bottom: 4px;
