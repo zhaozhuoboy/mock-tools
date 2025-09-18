@@ -22,11 +22,7 @@ export interface UserAttributes {
 export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'created_at' | 'updated_at'> {}
 
 // 用户模型类
-export class User extends Model {
-  declare id: number
-  declare uid: number
-  declare username: string
-}
+export class User extends Model {}
 
 // 初始化用户模型
 User.init(
