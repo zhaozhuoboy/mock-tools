@@ -69,6 +69,18 @@
         </div>
       </div>
     </div>
+
+    <div class="paging-wrap">
+      <NPagination
+        :page="paging.page"
+        :page-size="paging.size"
+        :page-sizes="[10, 20, 30, 50]"
+        size="large"
+        show-size-picker
+        @update:page="onPageChange"
+        @update:page-size="onPageSizeChange"
+      />
+    </div>
     
     <CreateApiModal
       :edit-data="currentApi"
@@ -83,8 +95,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { NButton, useMessage, useDialog, NSkeleton, NInput, NInputGroup, NInputGroupLabel, NTooltip, NEmpty } from 'naive-ui'
+import { ref, computed } from 'vue'
+import {
+  NButton,
+  useMessage,
+  useDialog,
+  NSkeleton,
+  NInput,
+  NInputGroup,
+  NInputGroupLabel,
+  NTooltip,
+  NEmpty,
+  NPagination
+} from 'naive-ui'
 import { useRouter, useRoute } from 'vue-router'
 import ApiItem from '@/components/projects/ApiItem.vue'
 import CreateApiModal from '@/components/projects/CreateApiModal.vue'
@@ -116,6 +139,12 @@ const showCreateApi = ref(false)
 const creatingApi = ref(false)
 const updatingApi = ref(false)
 const currentApi = ref<ApiDef | null>(null)
+
+const paging = reactive({
+  page: 1,
+  size: 10,
+  total: 0
+})
 
 const router = useRouter()
 const breadcrumbConfig = computed(() => [
@@ -181,11 +210,15 @@ try {
 
   if (project.value) {
     const { data: apisRes } = await useAsyncData(`apis-${pid}`,
-      () => serverFetch({ url: `/api/project/interface/${pid}`, method: 'get' })
+      () => serverFetch({
+        url: `/api/project/interface/${pid}?page=${paging.page}&size=${paging.size}`,
+        method: 'get'
+      })
     )
     const apisVal: any = apisRes.value
-    const list = Array.isArray(apisVal) ? apisVal : (Array.isArray(apisVal?.data) ? apisVal.data : [])
+    const list = apisVal.list || []
     apis.value = list
+    paging.total = apisVal.page.total
   }
 } catch (err: any) {
   error.value = err?.message || '加载失败'
@@ -219,15 +252,22 @@ const loadProjectInfo = async () => {
 const loadApis = async () => {
   const pid = (project.value?.pid || route.params.pid) as string
   if (!pid) return
-  const res: any = await ajax({ url: `/api/project/interface/${pid}`, method: 'get' }).catch(err => err)
+  const res: any = await ajax({
+    url: `/api/project/interface/${pid}?page=${paging.page}&size=${paging.size}`,
+    method: 'get'
+  }).catch(err => err)
+
   if (res && res.api === 1) {
     if (res.code === -1203) {
       router.replace('/404')
       return
     }
   }
-  const list = Array.isArray(res) ? res : (Array.isArray(res?.data) ? res.data : [])
+
+  console.log(res)
+  const list = res.list || []
   apis.value = list
+  paging.total = res.page.total
 }
 
 const onCreateApi = () => { showCreateApi.value = true }
@@ -314,6 +354,20 @@ const handleUpdateApi = async (data: any) => {
   }
 }
 // 客户端无需重复加载，SSR 已获取
+
+const onPageChange = (page: number) => {
+  paging.page = page
+  nextTick(() => {
+    loadApis()
+  })
+}
+
+const onPageSizeChange = (size: number) => {
+  paging.size = size;
+  nextTick(() => {
+    loadApis()
+  })
+}
 </script>
 
 <style scoped lang="scss">
@@ -399,6 +453,12 @@ const handleUpdateApi = async (data: any) => {
   padding: 8px 16px;
   border: 1px solid var(--border);
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.paging-wrap {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 0;
 }
 
 .empty {

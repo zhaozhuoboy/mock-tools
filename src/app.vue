@@ -1,5 +1,5 @@
 <template>
-  <NConfigProvider :theme="theme">
+  <NConfigProvider :locale="zhCN" :date-locale="dateZhCN" :theme="theme">
     <NMessageProvider>
       <NNotificationProvider>
         <NLoadingBarProvider>
@@ -15,7 +15,7 @@
 </template>
 <script>
 import { watch } from 'vue'
-import { NConfigProvider, NMessageProvider, NNotificationProvider, NLoadingBarProvider, NDialogProvider } from 'naive-ui'
+import { zhCN, dateZhCN, NConfigProvider, NMessageProvider, NNotificationProvider, NLoadingBarProvider, NDialogProvider } from 'naive-ui'
 import { useBaseStore } from '@/store/base'
 
 export default {
@@ -89,7 +89,9 @@ export default {
     })
 
     return {
-      theme
+      theme,
+      zhCN,
+      dateZhCN
     }
   }
 }

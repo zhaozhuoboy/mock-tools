@@ -4,7 +4,14 @@ import { Api } from '../models/Api'
 export class GroupService {
   // 注意：以下方法的 projectId 均指项目的 pid（与 api_groups.project_id 对应）
   static async listByProject(projectPid: number): Promise<ApiGroup[]> {
-    return ApiGroup.findAll({ where: { project_id: projectPid }, order: [['created_at', 'DESC']] })
+    return ApiGroup.findAll({
+      where: {
+        project_id: projectPid
+      },
+      order: [
+        ['created_at', 'DESC']
+      ]
+    })
   }
 
   static async findOrCreate(projectPid: number, name: string): Promise<ApiGroup> {

@@ -1,8 +1,26 @@
 import { Api, ApiAttributes, ApiCreationAttributes } from '../models/Api'
 
 export class ApiService {
-  static async listByProject(projectId: string): Promise<Api[]> {
-    return Api.findAll({ where: { project_id: projectId }, order: [['created_at', 'DESC']] })
+  /**
+   * 分页查询
+   * @param projectId 项目id
+   * @param page 页码
+   * @param size 每页条数
+   * @returns 
+   */
+  static async listByProject(projectId: string, page?: number, size?: number): Promise<Api[]> {
+    const currentPage = page || 1
+    const pageSize = size || 20
+    return Api.findAll({
+      where: {
+        project_id: projectId 
+      },
+      limit: pageSize,
+      offset: (currentPage - 1) * pageSize,
+      order: [
+        ['created_at', 'DESC']
+      ]
+    })
   }
   /**
    * 创建接口

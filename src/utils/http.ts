@@ -41,8 +41,12 @@ export default function ajax (option: {
     if (opt.method?.toLocaleLowerCase() === 'get') {
       const params = option.data || {}
       opt.query = params
-  
-      url += `?t=${Date.now()}`
+
+      if (url.indexOf('?') > -1) {
+        url += `&t=${Date.now()}`
+      }else {
+        url += `?t=${Date.now()}`
+      }
     }
   
     const method = opt.method?.toLowerCase()
