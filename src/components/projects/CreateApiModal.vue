@@ -63,6 +63,7 @@
       label-placement="top"
       label-width="auto"
       require-mark-placement="right-hanging"
+      v-if="!isEditMode"
     >
       <NFormItem label="接口数据（可选）" path="apiData">
         <MonacoEditor
@@ -106,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { NDrawer, NDrawerContent, NForm, NFormItem, NInput, NSelect, NButton, NIcon } from 'naive-ui'
 import MonacoEditor from '@/components/common/MonacoEditor.vue'
 import type { SelectOption } from 'naive-ui'

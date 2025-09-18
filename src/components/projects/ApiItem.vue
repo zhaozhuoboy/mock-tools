@@ -2,7 +2,9 @@
   <div class="api-item">
     <div class="left">
       <div class="api-wrap">
-        <NTag :type="methodType" size="small" round class="method">{{ method.toUpperCase() }}</NTag>
+        <NTag :type="methodType" size="small" round class="method">
+          {{ method.toUpperCase() }}
+        </NTag>
         <span class="path">{{ path }}</span>
       </div>
       <NTag v-if="group" size="small" type="warning" round class="group">{{ group }}</NTag>
@@ -84,7 +86,7 @@ const handleDetail = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 0;
+  padding: 12px 0;
 
 }
 

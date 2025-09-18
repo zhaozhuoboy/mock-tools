@@ -396,7 +396,7 @@ const handleUpdateApi = async (data: any) => {
 .api-list {
   background: var(--card);
   border-radius: 12px;
-  padding: 16px;
+  padding: 8px 16px;
   border: 1px solid var(--border);
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }

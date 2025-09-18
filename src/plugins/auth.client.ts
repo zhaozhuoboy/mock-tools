@@ -47,19 +47,15 @@ export default defineNuxtPlugin(async () => {
 
     // 验证 token 有效性
     try {
-      console.log('认证插件：验证 token 有效性')
       const result = await userStore.fetchUserInfo()
       
       if (result.success) {
-        console.log('认证插件：token 验证成功，放行')
         return next()
       } else {
-        console.log('认证插件：token 验证失败，跳转到登录页')
         userStore.clearUser()
         return next(`/auth/login?redirect=${encodeURIComponent(to.fullPath)}`)
       }
     } catch (error) {
-      console.error('认证插件：token 验证出错:', error)
       userStore.clearUser()
       return next(`/auth/login?redirect=${encodeURIComponent(to.fullPath)}`)
     }
